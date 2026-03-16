@@ -27,6 +27,7 @@ src/
 ## Rules
 
 ### Code Quality
+
 - Write clean, readable code. Prioritize clarity over cleverness
 - DRY — extract shared logic into `lib/` or reusable components
 - No overengineering — no unnecessary abstractions, wrappers, or layers
@@ -35,15 +36,18 @@ src/
 - Always run `bunx tsc --noEmit` after making changes to verify types
 
 ### Data Mutations
+
 - Use Server Actions in `src/actions/` — NOT API route handlers
 - Every Server Action must verify auth: `const { data: { user } } = await supabase.auth.getUser()`
 - Use `getUser()` (verified), never `getSession()` (unverified)
 
 ### Supabase Clients
+
 - Client Components → `@/lib/supabase/client`
 - Server Components / Actions → `@/lib/supabase/server`
 
 ### Git
+
 - Respect `.gitignore` — never commit `.env`, `node_modules/`, `.next/`
 - `.env.example` is tracked and documents required variables
 
@@ -51,7 +55,6 @@ src/
 
 ```bash
 bun run dev            # Dev server (Turbopack)
-bun run build          # Production build
 bun run lint           # ESLint
 bunx tsc --noEmit      # Type check — run after every change
 ```

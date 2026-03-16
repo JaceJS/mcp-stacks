@@ -1,10 +1,8 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
+import { Navbar } from "@/components/navbar";
+import { Footer } from "@/components/footer";
 
-/**
- * Layout for authenticated routes.
- * Checks auth state and redirects to login if not authenticated.
- */
 export default async function AuthLayout({
   children,
 }: {
@@ -20,9 +18,11 @@ export default async function AuthLayout({
   }
 
   return (
-    <div className="min-h-screen">
-      {/* TODO: Add dashboard sidebar/nav here */}
-      <main>{children}</main>
+    <div className="min-h-screen relative">
+      <div className="grain-overlay" />
+      <Navbar />
+      <main className="pt-16">{children}</main>
+      <Footer />
     </div>
   );
 }

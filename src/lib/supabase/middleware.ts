@@ -40,9 +40,9 @@ export async function updateSession(request: NextRequest) {
   // `getUser()` sends a request to the Supabase Auth server to revalidate
   // the token, while `getSession()` only reads unverified data from cookies.
   // See: https://supabase.com/docs/guides/auth/server-side/nextjs
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  // Revalidate the auth token server-side (not just reading cookies).
+  // See: https://supabase.com/docs/guides/auth/server-side/nextjs
+  await supabase.auth.getUser();
 
   // Optional: redirect unauthenticated users away from protected routes.
   // Uncomment and adjust the path check when you add protected pages.
