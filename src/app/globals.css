@@ -380,6 +380,45 @@ body {
   transform: translateY(-1px);
 }
 
+/* ─── GitHub Star Button ────────────────────────────────────────────────── */
+
+.github-star-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 20px;
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--foreground);
+  font-family: var(--font-code), monospace;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  text-decoration: none;
+}
+
+.github-star-btn:hover {
+  border-color: rgba(251, 191, 36, 0.4);
+  background: rgba(251, 191, 36, 0.06);
+  box-shadow:
+    0 0 20px rgba(251, 191, 36, 0.08),
+    inset 0 0 20px rgba(251, 191, 36, 0.03);
+  transform: translateY(-1px);
+}
+
+.github-star-divider {
+  width: 1px;
+  height: 16px;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.github-star-btn:hover .github-star-divider {
+  background: rgba(251, 191, 36, 0.2);
+}
+
 /* ─── Misc ──────────────────────────────────────────────────────────────── */
 
 .text-gradient {

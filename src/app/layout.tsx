@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Outfit, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
+import { SITE_NAME, SITE_URL } from "@/lib/constants";
 
 const outfit = Outfit({
   variable: "--font-outfit",
@@ -15,8 +16,8 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 const siteConfig = {
-  name: "MCP Stacks",
-  url: "https://mcpstacks.dev",
+  name: SITE_NAME,
+  url: SITE_URL,
   description:
     "Discover and share curated MCP server combinations. Browse community-tested stacks, copy configs in one click, and share your own setup.",
 };

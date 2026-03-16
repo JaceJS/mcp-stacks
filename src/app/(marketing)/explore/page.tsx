@@ -5,7 +5,8 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Explore Stacks",
-  description: "Browse community-curated MCP server combinations filtered by role and category.",
+  description:
+    "Browse community-curated MCP server combinations filtered by role and category.",
 };
 
 async function getStacks(tag?: string): Promise<StackCardData[]> {
@@ -33,7 +34,10 @@ async function getStacks(tag?: string): Promise<StackCardData[]> {
           .eq("tag_id", tagRow.id);
 
         if (stackIds && stackIds.length > 0) {
-          query = query.in("id", stackIds.map((s) => s.stack_id));
+          query = query.in(
+            "id",
+            stackIds.map((s) => s.stack_id),
+          );
         } else {
           return [];
         }
@@ -70,7 +74,10 @@ async function getStacks(tag?: string): Promise<StackCardData[]> {
           description: stack.description,
           user: user ?? { display_name: "Anonymous", username: null },
           servers: (stackServers ?? []).map((ss: Record<string, unknown>) => {
-            const server = ss.servers as { name: string; category: string | null } | null;
+            const server = ss.servers as {
+              name: string;
+              category: string | null;
+            } | null;
             return {
               name: server?.name ?? "Unknown",
               category: server?.category ?? null,
@@ -78,7 +85,7 @@ async function getStacks(tag?: string): Promise<StackCardData[]> {
           }),
           vote_count: voteCount ?? 0,
         };
-      })
+      }),
     );
 
     return results;
@@ -90,7 +97,10 @@ async function getStacks(tag?: string): Promise<StackCardData[]> {
 async function getTags() {
   try {
     const supabase = await createClient();
-    const { data } = await supabase.from("tags").select("name, slug").order("name");
+    const { data } = await supabase
+      .from("tags")
+      .select("name, slug")
+      .order("name");
     return data ?? [];
   } catch {
     return [];
@@ -103,10 +113,7 @@ export default async function ExplorePage({
   searchParams: Promise<{ tag?: string }>;
 }) {
   const params = await searchParams;
-  const [stacks, tags] = await Promise.all([
-    getStacks(params.tag),
-    getTags(),
-  ]);
+  const [stacks, tags] = await Promise.all([getStacks(params.tag), getTags()]);
 
   return (
     <div className="px-6 py-12">
@@ -116,7 +123,7 @@ export default async function ExplorePage({
           <h1 className="text-3xl sm:text-4xl font-bold tracking-tight mb-3">
             Explore stacks
           </h1>
-          <p className="text-[var(--foreground-muted)] max-w-lg">
+          <p className="text-[--foreground-muted] max-w-lg">
             Browse community-curated MCP server combinations. Find the right
             setup for your role.
           </p>
@@ -152,8 +159,17 @@ export default async function ExplorePage({
           </div>
         ) : (
           <div className="text-center py-20">
-            <div className="w-16 h-16 rounded-2xl bg-[var(--bg-tertiary)] border border-[var(--border)] flex items-center justify-center mx-auto mb-5">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--foreground-subtle)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <div className="w-16 h-16 rounded-2xl bg-[--bg-tertiary] border border-[--border] flex items-center justify-center mx-auto mb-5">
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="var(--foreground-subtle)"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
                 <rect x="3" y="3" width="7" height="7" rx="1" />
                 <rect x="14" y="3" width="7" height="7" rx="1" />
                 <rect x="3" y="14" width="7" height="7" rx="1" />
@@ -161,7 +177,7 @@ export default async function ExplorePage({
               </svg>
             </div>
             <h3 className="text-lg font-semibold mb-2">No stacks yet</h3>
-            <p className="text-[14px] text-[var(--foreground-muted)] mb-6">
+            <p className="text-[14px] text-[--foreground-muted] mb-6">
               Be the first to share your MCP server combination.
             </p>
             <Link href="/stacks/new" className="btn-primary">

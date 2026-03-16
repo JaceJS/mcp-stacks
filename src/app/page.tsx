@@ -2,6 +2,7 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { ConfigPreview } from "@/components/config-preview";
 import { Footer } from "@/components/footer";
+import { REPO_URL } from "@/lib/constants";
 
 /* ─── Category → pill class mapping ─────────────────────────────────────── */
 
@@ -117,7 +118,10 @@ async function getFeaturedStacks() {
           ...stack,
           user: user ?? { display_name: "Anonymous", username: null },
           servers: (stackServers ?? []).map((ss: Record<string, unknown>) => {
-            const server = ss.servers as { name: string; category: string | null } | null;
+            const server = ss.servers as {
+              name: string;
+              category: string | null;
+            } | null;
             return {
               name: server?.name ?? "Unknown",
               category: server?.category ?? null,
@@ -125,7 +129,7 @@ async function getFeaturedStacks() {
           }),
           vote_count: voteCount ?? 0,
         };
-      })
+      }),
     );
 
     return stacksWithDetails;
@@ -146,22 +150,53 @@ export default async function Home() {
       <div className="grain-overlay" />
 
       {/* ─── Navbar ──────────────────────────────────────────────────── */}
-      <nav className="nav-blur fixed top-0 left-0 right-0 z-50 border-b border-[var(--border)]">
+      <nav className="nav-blur fixed top-0 left-0 right-0 z-50 border-b border-(--border)">
         <div className="mx-auto max-w-7xl px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-8">
             <Link href="/" className="flex items-center gap-2.5 group">
-              <div className="w-8 h-8 rounded-lg bg-[var(--accent)] flex items-center justify-center transition-shadow group-hover:shadow-[0_0_16px_var(--accent-glow-strong)]">
+              <div className="w-8 h-8 rounded-lg bg-(--accent) flex items-center justify-center transition-shadow group-hover:shadow-[0_0_16px_var(--accent-glow-strong)]">
                 <svg
                   width="16"
                   height="16"
                   viewBox="0 0 16 16"
                   fill="none"
-                  className="text-[var(--bg-primary)]"
+                  className="text-(--bg-primary)"
                 >
-                  <rect x="1" y="1" width="6" height="6" rx="1.5" fill="currentColor" />
-                  <rect x="9" y="1" width="6" height="6" rx="1.5" fill="currentColor" opacity="0.6" />
-                  <rect x="1" y="9" width="6" height="6" rx="1.5" fill="currentColor" opacity="0.6" />
-                  <rect x="9" y="9" width="6" height="6" rx="1.5" fill="currentColor" opacity="0.3" />
+                  <rect
+                    x="1"
+                    y="1"
+                    width="6"
+                    height="6"
+                    rx="1.5"
+                    fill="currentColor"
+                  />
+                  <rect
+                    x="9"
+                    y="1"
+                    width="6"
+                    height="6"
+                    rx="1.5"
+                    fill="currentColor"
+                    opacity="0.6"
+                  />
+                  <rect
+                    x="1"
+                    y="9"
+                    width="6"
+                    height="6"
+                    rx="1.5"
+                    fill="currentColor"
+                    opacity="0.6"
+                  />
+                  <rect
+                    x="9"
+                    y="9"
+                    width="6"
+                    height="6"
+                    rx="1.5"
+                    fill="currentColor"
+                    opacity="0.3"
+                  />
                 </svg>
               </div>
               <span className="font-semibold text-[15px] tracking-tight">
@@ -170,12 +205,15 @@ export default async function Home() {
             </Link>
             <Link
               href="/explore"
-              className="text-[13px] text-[var(--foreground-muted)] hover:text-[var(--foreground)] transition-colors"
+              className="text-[13px] text-[--foreground-muted] hover:text-[--foreground] transition-colors"
             >
               Browse
             </Link>
           </div>
-          <Link href="/stacks/new" className="btn-primary !py-2 !px-5 !text-[13px] !rounded-lg">
+          <Link
+            href="/stacks/new"
+            className="btn-primary py-2! px-5! text-[13px]! rounded-lg!"
+          >
             Share your stack
           </Link>
         </div>
@@ -186,10 +224,10 @@ export default async function Home() {
         <div className="hero-glow" />
         <div className="relative z-10 mx-auto max-w-4xl text-center">
           {/* Badge */}
-          <div className="animate-fade-up inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[var(--border-accent)] bg-[var(--accent-glow)] mb-8">
-            <span className="w-1.5 h-1.5 rounded-full bg-[var(--accent)] animate-[pulse-glow_3s_ease-in-out_infinite]" />
+          <div className="animate-fade-up inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[--border-accent] bg-[--accent-glow] mb-8">
+            <span className="w-1.5 h-1.5 rounded-full bg-[--accent] animate-[pulse-glow_3s_ease-in-out_infinite]" />
             <span
-              className="text-[12px] tracking-wide text-[var(--accent)]"
+              className="text-[12px] tracking-wide text-[--accent]"
               style={{ fontFamily: "var(--font-code)" }}
             >
               10,000+ MCP servers exist. Which ones go together?
@@ -204,7 +242,7 @@ export default async function Home() {
           </h1>
 
           {/* Subtitle */}
-          <p className="animate-fade-up delay-200 text-lg sm:text-xl text-[var(--foreground-muted)] max-w-2xl mx-auto mb-10 leading-relaxed">
+          <p className="animate-fade-up delay-200 text-lg sm:text-xl text-[--foreground-muted] max-w-2xl mx-auto mb-10 leading-relaxed">
             Discover community-curated MCP server combinations. Copy a
             production-ready config in one click and start building faster.
           </p>
@@ -234,6 +272,36 @@ export default async function Home() {
               Share your stack
             </Link>
           </div>
+
+          {/* GitHub star */}
+          <div className="animate-fade-up delay-400 flex justify-center mt-6">
+            <a
+              href={REPO_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="github-star-btn"
+            >
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 16 16"
+                fill="currentColor"
+              >
+                <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0016 8c0-4.42-3.58-8-8-8z" />
+              </svg>
+              <span className="github-star-divider" />
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 16 16"
+                fill="currentColor"
+                className="text-amber-300"
+              >
+                <path d="M8 .25a.75.75 0 01.673.418l1.882 3.815 4.21.612a.75.75 0 01.416 1.279l-3.046 2.97.719 4.192a.75.75 0 01-1.088.791L8 12.347l-3.766 1.98a.75.75 0 01-1.088-.79l.72-4.194L.818 6.374a.75.75 0 01.416-1.28l4.21-.611L7.327.668A.75.75 0 018 .25z" />
+              </svg>
+              Star on GitHub
+            </a>
+          </div>
         </div>
       </section>
 
@@ -252,12 +320,12 @@ export default async function Home() {
                 className={`animate-fade-up text-center delay-${(i + 1) * 100}`}
               >
                 <div
-                  className="text-3xl sm:text-4xl font-bold text-[var(--accent)] mb-1"
+                  className="text-3xl sm:text-4xl font-bold text-[--accent] mb-1"
                   style={{ fontFamily: "var(--font-code)" }}
                 >
                   {stat.value}
                 </div>
-                <div className="text-[13px] text-[var(--foreground-muted)] tracking-wide uppercase">
+                <div className="text-[13px] text-[--foreground-muted] tracking-wide uppercase">
                   {stat.label}
                 </div>
               </div>
@@ -274,7 +342,7 @@ export default async function Home() {
             <h2 className="animate-fade-up text-3xl sm:text-4xl font-bold tracking-tight mb-4">
               Featured stacks
             </h2>
-            <p className="animate-fade-up delay-100 text-[var(--foreground-muted)] max-w-lg mx-auto">
+            <p className="animate-fade-up delay-100 text-[--foreground-muted] max-w-lg mx-auto">
               Community-tested combinations that developers actually use in
               production.
             </p>
@@ -291,13 +359,8 @@ export default async function Home() {
                   <h3 className="font-semibold text-[16px] leading-snug pr-4">
                     {stack.title}
                   </h3>
-                  <div className="flex items-center gap-1.5 shrink-0 text-[var(--foreground-muted)]">
-                    <svg
-                      width="14"
-                      height="14"
-                      viewBox="0 0 16 16"
-                      fill="none"
-                    >
+                  <div className="flex items-center gap-1.5 shrink-0 text-[--foreground-muted]">
+                    <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
                       <path
                         d="M8 3L9.8 6.6L14 7.2L11 10L11.7 14L8 12.1L4.3 14L5 10L2 7.2L6.2 6.6L8 3Z"
                         stroke="currentColor"
@@ -316,14 +379,14 @@ export default async function Home() {
 
                 {/* Author */}
                 <div
-                  className="text-[12px] text-[var(--foreground-subtle)] mb-3"
+                  className="text-[12px] text-[--foreground-subtle] mb-3"
                   style={{ fontFamily: "var(--font-code)" }}
                 >
                   by {stack.user.display_name ?? stack.user.username ?? "anon"}
                 </div>
 
                 {/* Description */}
-                <p className="text-[13px] text-[var(--foreground-muted)] leading-relaxed mb-5 flex-1">
+                <p className="text-[13px] text-[--foreground-muted] leading-relaxed mb-5 flex-1">
                   {stack.description}
                 </p>
 
@@ -341,7 +404,7 @@ export default async function Home() {
                 </div>
 
                 {/* Copy config */}
-                <button className="w-full py-2.5 rounded-lg border border-[var(--border)] text-[13px] text-[var(--foreground-muted)] hover:text-[var(--accent)] hover:border-[var(--border-accent)] hover:bg-[var(--accent-glow)] transition-all cursor-pointer flex items-center justify-center gap-2">
+                <button className="w-full py-2.5 rounded-lg border border-[--border] text-[13px] text-[--foreground-muted] hover:text-[--accent] hover:border-[--border-accent] hover:bg-[--accent-glow] transition-all cursor-pointer flex items-center justify-center gap-2">
                   <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
                     <rect
                       x="5"
@@ -367,7 +430,7 @@ export default async function Home() {
           <div className="text-center mt-10">
             <Link
               href="/explore"
-              className="inline-flex items-center gap-2 text-[14px] text-[var(--foreground-muted)] hover:text-[var(--accent)] transition-colors"
+              className="inline-flex items-center gap-2 text-[14px] text-[--foreground-muted] hover:text-[--accent] transition-colors"
             >
               View all stacks
               <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
@@ -391,7 +454,7 @@ export default async function Home() {
             <h2 className="animate-fade-up text-3xl sm:text-4xl font-bold tracking-tight mb-4">
               How it works
             </h2>
-            <p className="animate-fade-up delay-100 text-[var(--foreground-muted)]">
+            <p className="animate-fade-up delay-100 text-[--foreground-muted]">
               Three steps to a better MCP setup.
             </p>
           </div>
@@ -468,18 +531,18 @@ export default async function Home() {
                 className={`animate-fade-up delay-${(i + 1) * 200} glass-card rounded-2xl p-7`}
               >
                 <div className="flex items-center gap-3 mb-5">
-                  <div className="w-10 h-10 rounded-xl bg-[var(--accent-glow)] border border-[var(--border-accent)] flex items-center justify-center text-[var(--accent)]">
+                  <div className="w-10 h-10 rounded-xl bg-[--accent-glow] border border-[--border-accent] flex items-center justify-center text-[--accent]">
                     {card.icon}
                   </div>
                   <span
-                    className="text-[11px] text-[var(--foreground-subtle)] tracking-widest uppercase"
+                    className="text-[11px] text-[--foreground-subtle] tracking-widest uppercase"
                     style={{ fontFamily: "var(--font-code)" }}
                   >
                     Step {card.step}
                   </span>
                 </div>
                 <h3 className="text-lg font-semibold mb-2">{card.title}</h3>
-                <p className="text-[14px] text-[var(--foreground-muted)] leading-relaxed">
+                <p className="text-[14px] text-[--foreground-muted] leading-relaxed">
                   {card.description}
                 </p>
               </div>
@@ -498,7 +561,7 @@ export default async function Home() {
                 <br />
                 <span className="text-gradient">Every editor.</span>
               </h2>
-              <p className="animate-fade-up delay-100 text-[var(--foreground-muted)] leading-relaxed mb-6">
+              <p className="animate-fade-up delay-100 text-[--foreground-muted] leading-relaxed mb-6">
                 Every stack generates a config tailored to your editor. Copy,
                 paste, and start using your new MCP servers immediately — no
                 manual setup required.
@@ -508,11 +571,11 @@ export default async function Home() {
                   (editor) => (
                     <span
                       key={editor}
-                      className="pill pill-default !text-[12px]"
+                      className="pill pill-default text-[12px]!"
                     >
                       {editor}
                     </span>
-                  )
+                  ),
                 )}
               </div>
             </div>
@@ -528,7 +591,7 @@ export default async function Home() {
         <div className="mx-auto max-w-3xl text-center">
           <div className="glass-card rounded-3xl p-12 sm:p-16 relative overflow-hidden">
             {/* Background glow */}
-            <div className="absolute inset-0 bg-gradient-to-br from-[var(--accent-glow)] to-transparent opacity-50 pointer-events-none" />
+            <div className="absolute inset-0 bg-linear-to-br from-[--accent-glow] to-transparent opacity-50 pointer-events-none" />
 
             <div className="relative z-10">
               <h2 className="animate-fade-up text-3xl sm:text-4xl font-bold tracking-tight mb-4">
@@ -536,7 +599,7 @@ export default async function Home() {
                 <br />
                 <span className="text-gradient">thousands.</span>
               </h2>
-              <p className="animate-fade-up delay-100 text-[var(--foreground-muted)] max-w-md mx-auto mb-8 leading-relaxed">
+              <p className="animate-fade-up delay-100 text-(--foreground-muted) max-w-md mx-auto mb-8 leading-relaxed">
                 Share the MCP server combination that powers your workflow.
                 Every stack published helps another developer skip the guessing
                 game.

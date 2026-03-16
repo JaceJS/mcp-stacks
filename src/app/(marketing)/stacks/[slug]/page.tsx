@@ -48,24 +48,30 @@ async function getStack(slug: string) {
 
     if (!stack) return null;
 
-    const [{ data: user }, { data: stackServers }, { count: voteCount }, { data: currentUser }] =
-      await Promise.all([
-        supabase
-          .from("users")
-          .select("display_name, username, avatar_url")
-          .eq("id", stack.user_id)
-          .single(),
-        supabase
-          .from("stack_servers")
-          .select("server_id, servers(name, slug, category, npm_package, description)")
-          .eq("stack_id", stack.id)
-          .order("position"),
-        supabase
-          .from("votes")
-          .select("*", { count: "exact", head: true })
-          .eq("stack_id", stack.id),
-        supabase.auth.getUser().then(({ data }) => ({ data: data.user })),
-      ]);
+    const [
+      { data: user },
+      { data: stackServers },
+      { count: voteCount },
+      { data: currentUser },
+    ] = await Promise.all([
+      supabase
+        .from("users")
+        .select("display_name, username, avatar_url")
+        .eq("id", stack.user_id)
+        .single(),
+      supabase
+        .from("stack_servers")
+        .select(
+          "server_id, servers(name, slug, category, npm_package, description)",
+        )
+        .eq("stack_id", stack.id)
+        .order("position"),
+      supabase
+        .from("votes")
+        .select("*", { count: "exact", head: true })
+        .eq("stack_id", stack.id),
+      supabase.auth.getUser().then(({ data }) => ({ data: data.user })),
+    ]);
 
     let hasVoted = false;
     if (currentUser) {
@@ -78,26 +84,32 @@ async function getStack(slug: string) {
       hasVoted = !!vote;
     }
 
-    const servers: Server[] = (stackServers ?? []).map((ss: Record<string, unknown>) => {
-      const server = ss.servers as {
-        name: string;
-        slug: string;
-        category: string | null;
-        npm_package: string | null;
-        description: string | null;
-      } | null;
-      return {
-        name: server?.name ?? "Unknown",
-        slug: server?.slug ?? "",
-        category: server?.category ?? null,
-        npm_package: server?.npm_package ?? null,
-        description: server?.description ?? null,
-      };
-    });
+    const servers: Server[] = (stackServers ?? []).map(
+      (ss: Record<string, unknown>) => {
+        const server = ss.servers as {
+          name: string;
+          slug: string;
+          category: string | null;
+          npm_package: string | null;
+          description: string | null;
+        } | null;
+        return {
+          name: server?.name ?? "Unknown",
+          slug: server?.slug ?? "",
+          category: server?.category ?? null,
+          npm_package: server?.npm_package ?? null,
+          description: server?.description ?? null,
+        };
+      },
+    );
 
     return {
       ...stack,
-      user: user ?? { display_name: "Anonymous", username: null, avatar_url: null },
+      user: user ?? {
+        display_name: "Anonymous",
+        username: null,
+        avatar_url: null,
+      },
       servers,
       vote_count: voteCount ?? 0,
       has_voted: hasVoted,
@@ -119,7 +131,9 @@ export async function generateMetadata({
 
   return {
     title: stack.title,
-    description: stack.description ?? `A curated MCP server stack with ${stack.servers.length} servers.`,
+    description:
+      stack.description ??
+      `A curated MCP server stack with ${stack.servers.length} servers.`,
   };
 }
 
@@ -136,7 +150,9 @@ export default async function StackDetailPage({
   const serverConfigs: Record<string, Record<string, unknown>> = {};
   for (const server of stack.servers) {
     if (server.npm_package) {
-      serverConfigs[server.slug || server.name.toLowerCase().replace(/\s+/g, "-")] = {
+      serverConfigs[
+        server.slug || server.name.toLowerCase().replace(/\s+/g, "-")
+      ] = {
         command: "npx",
         args: [server.npm_package],
       };
@@ -148,11 +164,14 @@ export default async function StackDetailPage({
     cursor: JSON.stringify(
       {
         mcpServers: Object.fromEntries(
-          Object.entries(serverConfigs).map(([k, v]) => [k, { ...v, enabled: true }])
+          Object.entries(serverConfigs).map(([k, v]) => [
+            k,
+            { ...v, enabled: true },
+          ]),
         ),
       },
       null,
-      2
+      2,
     ),
     windsurf: JSON.stringify(
       {
@@ -160,18 +179,18 @@ export default async function StackDetailPage({
           Object.entries(serverConfigs).map(([k, v]) => {
             const args = (v.args as string[]) ?? [];
             return [k, { serverUrl: `npx ${args[0] ?? ""}`.trim() }];
-          })
+          }),
         ),
       },
       null,
-      2
+      2,
     ),
     vscode: JSON.stringify(
       {
         "mcp.servers": serverConfigs,
       },
       null,
-      2
+      2,
     ),
   };
 
@@ -181,10 +200,16 @@ export default async function StackDetailPage({
         {/* Back link */}
         <a
           href="/explore"
-          className="inline-flex items-center gap-1.5 text-[13px] text-[var(--foreground-subtle)] hover:text-[var(--foreground-muted)] transition-colors mb-8"
+          className="inline-flex items-center gap-1.5 text-[13px] text-[--foreground-subtle] hover:text-[--foreground-muted] transition-colors mb-8"
         >
           <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
-            <path d="M10 3L5 8L10 13" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+            <path
+              d="M10 3L5 8L10 13"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
           </svg>
           Back to stacks
         </a>
@@ -196,14 +221,14 @@ export default async function StackDetailPage({
           </h1>
           <div className="flex items-center gap-3 mb-4">
             <span
-              className="text-[13px] text-[var(--foreground-subtle)]"
+              className="text-[13px] text-[--foreground-subtle]"
               style={{ fontFamily: "var(--font-code)" }}
             >
               by {stack.user.display_name ?? stack.user.username ?? "anon"}
             </span>
           </div>
           {stack.description && (
-            <p className="text-[var(--foreground-muted)] leading-relaxed max-w-2xl">
+            <p className="text-[--foreground-muted] leading-relaxed max-w-2xl">
               {stack.description}
             </p>
           )}
@@ -229,20 +254,22 @@ export default async function StackDetailPage({
                 key={server.name}
                 className="glass-card rounded-xl p-4 flex items-start gap-3"
               >
-                <span className={`pill ${getPillClass(server.category)} mt-0.5`}>
+                <span
+                  className={`pill ${getPillClass(server.category)} mt-0.5`}
+                >
                   <span className="w-1.5 h-1.5 rounded-full bg-current opacity-60" />
                   {server.category ?? "other"}
                 </span>
                 <div className="flex-1 min-w-0">
                   <div className="font-medium text-[14px]">{server.name}</div>
                   {server.description && (
-                    <p className="text-[12px] text-[var(--foreground-muted)] mt-1 leading-relaxed">
+                    <p className="text-[12px] text-[--foreground-muted] mt-1 leading-relaxed">
                       {server.description}
                     </p>
                   )}
                   {server.npm_package && (
                     <code
-                      className="text-[11px] text-[var(--foreground-subtle)] mt-1 block"
+                      className="text-[11px] text-[--foreground-subtle] mt-1 block"
                       style={{ fontFamily: "var(--font-code)" }}
                     >
                       {server.npm_package}
