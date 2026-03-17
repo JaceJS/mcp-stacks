@@ -1,5 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
-import { CreateStackForm } from "@/components/create-stack-form";
+import { CreateStackForm } from "@/components/CreateStackForm";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {

@@ -1,8 +1,8 @@
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { VoteButton } from "@/components/vote-button";
-import { ShareButton } from "@/components/share-button";
-import { StackDetailConfig } from "@/components/stack-detail-config";
+import { VoteButton } from "@/components/VoteButton";
+import { ShareButton } from "@/components/ShareButton";
+import { StackDetailConfig } from "@/components/StackDetailConfig";
 import type { Metadata } from "next";
 
 const categoryClass: Record<string, string> = {

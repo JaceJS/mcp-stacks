@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
-import { StackCard, type StackCardData } from "@/components/stack-card";
+import { StackCard, type StackCardData } from "@/components/StackCard";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {

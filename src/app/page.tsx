@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
-import { ConfigPreview } from "@/components/config-preview";
-import { Footer } from "@/components/footer";
+import { ConfigPreview } from "@/components/ConfigPreview";
+import { Footer } from "@/components/Footer";
 import { REPO_URL } from "@/lib/constants";
 
 /* ─── Category → pill class mapping ─────────────────────────────────────── */
@@ -228,7 +228,7 @@ export default async function Home() {
             <span className="w-1.5 h-1.5 rounded-full bg-[--accent] animate-[pulse-glow_3s_ease-in-out_infinite]" />
             <span
               className="text-[12px] tracking-wide text-[--accent]"
-              style={{ fontFamily: "var(--font-code)" }}
+              style={{ fontFamily: "var--(--font-code)" }}
             >
               10,000+ MCP servers exist. Which ones go together?
             </span>
