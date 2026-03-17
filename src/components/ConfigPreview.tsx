@@ -439,7 +439,7 @@ export function ConfigPreview() {
   return (
     <div className="code-block animate-float">
       {/* Tab bar */}
-      <div className="flex items-center justify-between border-b border-[var(--border)] px-2">
+      <div className="flex items-center justify-between border-b border-border px-2">
         <div className="flex overflow-x-auto">
           {editors.map((editor) => (
             <button
@@ -453,8 +453,7 @@ export function ConfigPreview() {
         </div>
         <button
           onClick={handleCopy}
-          className="text-[12px] px-3 py-1.5 rounded-md text-[var(--foreground-muted)] hover:text-[var(--accent)] hover:bg-[var(--accent-glow)] transition-all cursor-pointer border-none bg-transparent mr-2"
-          style={{ fontFamily: "var(--font-code)" }}
+          className="mr-2 cursor-pointer rounded-md border-none bg-transparent px-3 py-1.5 font-mono text-[12px] text-muted transition-all hover:bg-accent-glow hover:text-accent"
         >
           {copied ? "Copied!" : "Copy"}
         </button>

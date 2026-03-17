@@ -35,12 +35,12 @@ export interface StackCardData {
 export function StackCard({ stack }: { stack: StackCardData }) {
   return (
     <Link href={`/stacks/${stack.slug}`} className="block">
-      <article className="glass-card rounded-2xl p-6 flex flex-col h-full">
-        <div className="flex items-start justify-between mb-3">
-          <h3 className="font-semibold text-[16px] leading-snug pr-4">
+      <article className="glass-card flex h-full flex-col rounded-2xl p-6">
+        <div className="mb-3 flex items-start justify-between">
+          <h3 className="pr-4 text-[16px] font-semibold leading-snug">
             {stack.title}
           </h3>
-          <div className="flex items-center gap-1.5 shrink-0 text-[var(--foreground-muted)]">
+          <div className="flex shrink-0 items-center gap-1.5 text-muted">
             <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
               <path
                 d="M8 3L9.8 6.6L14 7.2L11 10L11.7 14L8 12.1L4.3 14L5 10L2 7.2L6.2 6.6L8 3Z"
@@ -49,23 +49,15 @@ export function StackCard({ stack }: { stack: StackCardData }) {
                 strokeLinejoin="round"
               />
             </svg>
-            <span
-              className="text-[12px]"
-              style={{ fontFamily: "var(--font-code)" }}
-            >
-              {stack.vote_count}
-            </span>
+            <span className="font-mono text-[12px]">{stack.vote_count}</span>
           </div>
         </div>
 
-        <div
-          className="text-[12px] text-[var(--foreground-subtle)] mb-3"
-          style={{ fontFamily: "var(--font-code)" }}
-        >
+        <div className="mb-3 font-mono text-[12px] text-subtle">
           by {stack.user.display_name ?? stack.user.username ?? "anon"}
         </div>
 
-        <p className="text-[13px] text-[var(--foreground-muted)] leading-relaxed mb-5 flex-1">
+        <p className="mb-5 flex-1 text-[13px] leading-relaxed text-muted">
           {stack.description}
         </p>
 
@@ -75,7 +67,7 @@ export function StackCard({ stack }: { stack: StackCardData }) {
               key={server.name}
               className={`pill ${getPillClass(server.category)}`}
             >
-              <span className="w-1.5 h-1.5 rounded-full bg-current opacity-60" />
+              <span className="h-1.5 w-1.5 rounded-full bg-current opacity-60" />
               {server.name}
             </span>
           ))}

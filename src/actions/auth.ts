@@ -54,13 +54,17 @@ export async function signOut() {
  * Sign in with an OAuth provider (GitHub, Google, etc.).
  * Returns the OAuth URL for client-side redirect.
  */
-export async function signInWithOAuth(provider: "github" | "google") {
+export async function signInWithOAuth(
+  provider: "github" | "google",
+  next = "/dashboard",
+) {
   const supabase = await createClient();
+  const safeNext = next.startsWith("/") ? next : "/dashboard";
 
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider,
     options: {
-      redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"}/auth/callback`,
+      redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"}/auth/callback?next=${encodeURIComponent(safeNext)}`,
     },
   });
 
