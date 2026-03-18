@@ -48,7 +48,7 @@ src/
 
 ### Git
 
-- Respect `.gitignore` — never commit `.env`, `node_modules/`, `.next/`
+- Respect `.gitignore` — never read & commit `.env`, `node_modules/`, `.next/`
 - `.env.example` is tracked and documents required variables
 
 ## Commands
