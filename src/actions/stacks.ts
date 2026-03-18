@@ -2,6 +2,7 @@
 
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
+import { slugify } from "@/lib/utils";
 import type { Json } from "@/types/database";
 
 /**
@@ -17,10 +18,7 @@ export async function createStack(formData: FormData) {
 
   const title = formData.get("title") as string;
   const description = formData.get("description") as string | null;
-  const slug = title
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/(^-|-$)/g, "");
+  const slug = slugify(title);
 
   const { data, error } = await supabase
     .from("stacks")

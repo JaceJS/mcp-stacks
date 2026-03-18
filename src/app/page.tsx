@@ -2,65 +2,10 @@ import Link from "next/link";
 import { ConfigPreview } from "@/components/ConfigPreview";
 import { Footer } from "@/components/Footer";
 import { Navbar } from "@/components/Navbar";
-import { StackCard, type StackCardData } from "@/components/StackCard";
+import { StackCard } from "@/components/StackCard";
 import { REPO_URL } from "@/lib/constants";
-import { createClient } from "@/lib/supabase/server";
-
-const mockStacks: StackCardData[] = [
-  {
-    id: "1",
-    title: "Full-Stack AI Developer",
-    slug: "full-stack-ai-dev",
-    description:
-      "Everything you need for AI-powered development. From context-aware docs to database management and code search.",
-    user: { display_name: "Sarah Chen", username: "sarachen" },
-    servers: [
-      { name: "Context7", category: "docs" },
-      { name: "Supabase", category: "database" },
-      { name: "Brave Search", category: "search" },
-      { name: "GitHub", category: "dev-tools" },
-      { name: "Sentry", category: "monitoring" },
-    ],
-    vote_count: 342,
-  },
-  {
-    id: "2",
-    title: "Data Engineering Pipeline",
-    slug: "data-engineering-pipeline",
-    description:
-      "Optimized for building and monitoring data pipelines. Query databases, search logs, and track pipeline health.",
-    user: { display_name: "Marcus Rivera", username: "mrivera" },
-    servers: [
-      { name: "PostgreSQL", category: "database" },
-      { name: "Elasticsearch", category: "search" },
-      { name: "Grafana", category: "monitoring" },
-      { name: "AWS", category: "cloud" },
-    ],
-    vote_count: 218,
-  },
-  {
-    id: "3",
-    title: "Open Source Maintainer",
-    slug: "open-source-maintainer",
-    description:
-      "Stay on top of issues, docs, and community. Built for maintainers who juggle multiple repos and need fast context.",
-    user: { display_name: "Aiko Tanaka", username: "aikot" },
-    servers: [
-      { name: "GitHub", category: "dev-tools" },
-      { name: "Linear", category: "dev-tools" },
-      { name: "Notion", category: "docs" },
-      { name: "Slack", category: "monitoring" },
-      { name: "Context7", category: "docs" },
-    ],
-    vote_count: 189,
-  },
-];
-
-const stats = [
-  { value: "0", label: "Stacks shared", delayClass: "delay-100" },
-  { value: "0", label: "Configs copied", delayClass: "delay-200" },
-  { value: "0", label: "Developers", delayClass: "delay-300" },
-];
+import { getFeaturedStacks } from "@/lib/queries/stacks";
+import { getSiteStats } from "@/lib/queries/stats";
 
 const steps = [
   {
@@ -132,67 +77,11 @@ const steps = [
   },
 ];
 
-async function getFeaturedStacks(): Promise<StackCardData[] | null> {
-  try {
-    const supabase = await createClient();
-    const { data: stacks } = await supabase
-      .from("stacks")
-      .select("id, title, slug, description, user_id, created_at")
-      .eq("is_public", true)
-      .order("created_at", { ascending: false })
-      .limit(3);
-
-    if (!stacks?.length) {
-      return null;
-    }
-
-    const stacksWithDetails = await Promise.all(
-      stacks.map(async (stack) => {
-        const [{ data: user }, { data: stackServers }, { count: voteCount }] =
-          await Promise.all([
-            supabase
-              .from("users")
-              .select("display_name, username")
-              .eq("id", stack.user_id)
-              .single(),
-            supabase
-              .from("stack_servers")
-              .select("server_id, servers(name, category)")
-              .eq("stack_id", stack.id)
-              .order("position"),
-            supabase
-              .from("votes")
-              .select("*", { count: "exact", head: true })
-              .eq("stack_id", stack.id),
-          ]);
-
-        return {
-          ...stack,
-          user: user ?? { display_name: "Anonymous", username: null },
-          servers: (stackServers ?? []).map((stackServer: Record<string, unknown>) => {
-            const server = stackServer.servers as {
-              name: string;
-              category: string | null;
-            } | null;
-
-            return {
-              name: server?.name ?? "Unknown",
-              category: server?.category ?? null,
-            };
-          }),
-          vote_count: voteCount ?? 0,
-        };
-      }),
-    );
-
-    return stacksWithDetails;
-  } catch {
-    return null;
-  }
-}
-
 export default async function Home() {
-  const featuredStacks = (await getFeaturedStacks()) ?? mockStacks;
+  const [featuredStacks, stats] = await Promise.all([
+    getFeaturedStacks(),
+    getSiteStats(),
+  ]);
 
   return (
     <div className="relative min-h-screen overflow-hidden">
@@ -274,20 +163,23 @@ export default async function Home() {
       <section className="relative z-10 px-6 pb-24">
         <div className="mx-auto max-w-4xl">
           <div className="divider mb-12" />
-          <div className="grid grid-cols-3 gap-8">
-            {stats.map((stat) => (
-              <div
-                key={stat.label}
-                className={`animate-fade-up ${stat.delayClass} text-center`}
-              >
-                <div className="mb-1 font-mono text-3xl font-bold text-accent sm:text-4xl">
-                  {stat.value}
-                </div>
-                <div className="text-[13px] uppercase tracking-wide text-muted">
-                  {stat.label}
-                </div>
+          <div className="grid grid-cols-2 gap-8">
+            <div className="animate-fade-up delay-100 text-center">
+              <div className="mb-1 font-mono text-3xl font-bold text-accent sm:text-4xl">
+                {stats.stacks}
               </div>
-            ))}
+              <div className="text-[13px] uppercase tracking-wide text-muted">
+                Stacks shared
+              </div>
+            </div>
+            <div className="animate-fade-up delay-200 text-center">
+              <div className="mb-1 font-mono text-3xl font-bold text-accent sm:text-4xl">
+                {stats.users}
+              </div>
+              <div className="text-[13px] uppercase tracking-wide text-muted">
+                Developers
+              </div>
+            </div>
           </div>
           <div className="divider mt-12" />
         </div>
@@ -305,13 +197,22 @@ export default async function Home() {
             </p>
           </div>
 
-          <div className="grid gap-6 md:grid-cols-3">
-            {featuredStacks.map((stack) => (
-              <div key={stack.id} className="animate-fade-up delay-200">
-                <StackCard stack={stack} />
-              </div>
-            ))}
-          </div>
+          {featuredStacks.length > 0 ? (
+            <div className="grid gap-6 md:grid-cols-3">
+              {featuredStacks.map((stack) => (
+                <div key={stack.id} className="animate-fade-up delay-200">
+                  <StackCard stack={stack} />
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p className="text-center text-muted py-10">
+              No stacks yet.{" "}
+              <Link href="/stacks/new" className="text-accent hover:underline">
+                Be the first to share yours.
+              </Link>
+            </p>
+          )}
 
           <div className="mt-10 text-center">
             <Link

@@ -1,124 +1,11 @@
 import { notFound } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
 import { VoteButton } from "@/components/VoteButton";
 import { ShareButton } from "@/components/ShareButton";
 import { StackDetailConfig } from "@/components/StackDetailConfig";
+import { getStack } from "@/lib/queries/stacks";
+import { buildEditorConfigs } from "@/lib/config-builder";
+import { getPillClass } from "@/lib/category";
 import type { Metadata } from "next";
-
-const categoryClass: Record<string, string> = {
-  docs: "pill-docs",
-  documentation: "pill-docs",
-  dev: "pill-dev",
-  "dev-tools": "pill-dev",
-  "dev tools": "pill-dev",
-  development: "pill-dev",
-  database: "pill-database",
-  db: "pill-database",
-  search: "pill-search",
-  monitoring: "pill-monitoring",
-  observability: "pill-monitoring",
-  ai: "pill-ai",
-  cloud: "pill-cloud",
-  infrastructure: "pill-cloud",
-};
-
-function getPillClass(category: string | null) {
-  if (!category) return "pill-default";
-  return categoryClass[category.toLowerCase()] ?? "pill-default";
-}
-
-interface Server {
-  name: string;
-  slug: string;
-  category: string | null;
-  npm_package: string | null;
-  description: string | null;
-}
-
-async function getStack(slug: string) {
-  try {
-    const supabase = await createClient();
-
-    const { data: stack } = await supabase
-      .from("stacks")
-      .select("*")
-      .eq("slug", slug)
-      .eq("is_public", true)
-      .single();
-
-    if (!stack) return null;
-
-    const [
-      { data: user },
-      { data: stackServers },
-      { count: voteCount },
-      { data: currentUser },
-    ] = await Promise.all([
-      supabase
-        .from("users")
-        .select("display_name, username, avatar_url")
-        .eq("id", stack.user_id)
-        .single(),
-      supabase
-        .from("stack_servers")
-        .select(
-          "server_id, servers(name, slug, category, npm_package, description)",
-        )
-        .eq("stack_id", stack.id)
-        .order("position"),
-      supabase
-        .from("votes")
-        .select("*", { count: "exact", head: true })
-        .eq("stack_id", stack.id),
-      supabase.auth.getUser().then(({ data }) => ({ data: data.user })),
-    ]);
-
-    let hasVoted = false;
-    if (currentUser) {
-      const { data: vote } = await supabase
-        .from("votes")
-        .select("id")
-        .eq("user_id", currentUser.id)
-        .eq("stack_id", stack.id)
-        .single();
-      hasVoted = !!vote;
-    }
-
-    const servers: Server[] = (stackServers ?? []).map(
-      (ss: Record<string, unknown>) => {
-        const server = ss.servers as {
-          name: string;
-          slug: string;
-          category: string | null;
-          npm_package: string | null;
-          description: string | null;
-        } | null;
-        return {
-          name: server?.name ?? "Unknown",
-          slug: server?.slug ?? "",
-          category: server?.category ?? null,
-          npm_package: server?.npm_package ?? null,
-          description: server?.description ?? null,
-        };
-      },
-    );
-
-    return {
-      ...stack,
-      user: user ?? {
-        display_name: "Anonymous",
-        username: null,
-        avatar_url: null,
-      },
-      servers,
-      vote_count: voteCount ?? 0,
-      has_voted: hasVoted,
-      is_logged_in: !!currentUser,
-    };
-  } catch {
-    return null;
-  }
-}
 
 export async function generateMetadata({
   params,
@@ -146,53 +33,7 @@ export default async function StackDetailPage({
   const stack = await getStack(slug);
   if (!stack) notFound();
 
-  // Build config JSON for each editor
-  const serverConfigs: Record<string, Record<string, unknown>> = {};
-  for (const server of stack.servers) {
-    if (server.npm_package) {
-      serverConfigs[
-        server.slug || server.name.toLowerCase().replace(/\s+/g, "-")
-      ] = {
-        command: "npx",
-        args: [server.npm_package],
-      };
-    }
-  }
-
-  const configs = {
-    claude: JSON.stringify({ mcpServers: serverConfigs }, null, 2),
-    cursor: JSON.stringify(
-      {
-        mcpServers: Object.fromEntries(
-          Object.entries(serverConfigs).map(([k, v]) => [
-            k,
-            { ...v, enabled: true },
-          ]),
-        ),
-      },
-      null,
-      2,
-    ),
-    windsurf: JSON.stringify(
-      {
-        mcpServers: Object.fromEntries(
-          Object.entries(serverConfigs).map(([k, v]) => {
-            const args = (v.args as string[]) ?? [];
-            return [k, { serverUrl: `npx ${args[0] ?? ""}`.trim() }];
-          }),
-        ),
-      },
-      null,
-      2,
-    ),
-    vscode: JSON.stringify(
-      {
-        "mcp.servers": serverConfigs,
-      },
-      null,
-      2,
-    ),
-  };
+  const configs = buildEditorConfigs(stack.servers);
 
   return (
     <div className="px-6 py-12">
@@ -282,7 +123,7 @@ export default async function StackDetailPage({
         </div>
 
         {/* Config preview */}
-        {Object.keys(serverConfigs).length > 0 && (
+        {stack.servers.some((s) => s.npm_package) && (
           <div>
             <h2 className="text-lg font-semibold mb-4">Copy config</h2>
             <StackDetailConfig configs={configs} />

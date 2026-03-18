@@ -1,52 +1,12 @@
 import Link from "next/link";
-import { createClient } from "@/lib/supabase/server";
 import { deleteStack } from "@/actions/stacks";
 import { signOut } from "@/actions/auth";
+import { getUserStacks } from "@/lib/queries/stacks";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Dashboard",
 };
-
-async function getUserStacks() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) return { stacks: [], user: null };
-
-  const { data: profile } = await supabase
-    .from("users")
-    .select("display_name, username, avatar_url")
-    .eq("id", user.id)
-    .single();
-
-  const { data: stacks } = await supabase
-    .from("stacks")
-    .select("id, title, slug, description, is_public, created_at")
-    .eq("user_id", user.id)
-    .order("created_at", { ascending: false });
-
-  const stacksWithVotes = await Promise.all(
-    (stacks ?? []).map(async (stack) => {
-      const { count } = await supabase
-        .from("votes")
-        .select("*", { count: "exact", head: true })
-        .eq("stack_id", stack.id);
-      return { ...stack, vote_count: count ?? 0 };
-    })
-  );
-
-  return {
-    stacks: stacksWithVotes,
-    user: {
-      email: user.email,
-      display_name: profile?.display_name,
-      username: profile?.username,
-      avatar_url: profile?.avatar_url,
-    },
-  };
-}
 
 export default async function DashboardPage() {
   const { stacks, user } = await getUserStacks();

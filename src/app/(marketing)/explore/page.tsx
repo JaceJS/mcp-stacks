@@ -1,6 +1,7 @@
 import Link from "next/link";
-import { createClient } from "@/lib/supabase/server";
-import { StackCard, type StackCardData } from "@/components/StackCard";
+import { StackCard } from "@/components/StackCard";
+import { getStacks } from "@/lib/queries/stacks";
+import { getTags } from "@/lib/queries/tags";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -9,110 +10,16 @@ export const metadata: Metadata = {
     "Browse community-curated MCP server combinations filtered by role and category.",
 };
 
-async function getStacks(tag?: string): Promise<StackCardData[]> {
-  try {
-    const supabase = await createClient();
-
-    let query = supabase
-      .from("stacks")
-      .select("id, title, slug, description, user_id, created_at")
-      .eq("is_public", true)
-      .order("created_at", { ascending: false });
-
-    if (tag) {
-      const { data: tagRow } = await supabase
-        .from("tags")
-        .select("id")
-        .eq("slug", tag)
-        .single();
-
-      if (tagRow) {
-        const { data: stackIds } = await supabase
-          .from("stack_tags")
-          .select("stack_id")
-          .eq("tag_id", tagRow.id);
-
-        if (stackIds && stackIds.length > 0) {
-          query = query.in(
-            "id",
-            stackIds.map((s) => s.stack_id),
-          );
-        } else {
-          return [];
-        }
-      }
-    }
-
-    const { data: stacks } = await query;
-    if (!stacks || stacks.length === 0) return [];
-
-    const results = await Promise.all(
-      stacks.map(async (stack) => {
-        const [{ data: user }, { data: stackServers }, { count: voteCount }] =
-          await Promise.all([
-            supabase
-              .from("users")
-              .select("display_name, username")
-              .eq("id", stack.user_id)
-              .single(),
-            supabase
-              .from("stack_servers")
-              .select("server_id, servers(name, category)")
-              .eq("stack_id", stack.id)
-              .order("position"),
-            supabase
-              .from("votes")
-              .select("*", { count: "exact", head: true })
-              .eq("stack_id", stack.id),
-          ]);
-
-        return {
-          id: stack.id,
-          title: stack.title,
-          slug: stack.slug,
-          description: stack.description,
-          user: user ?? { display_name: "Anonymous", username: null },
-          servers: (stackServers ?? []).map((ss: Record<string, unknown>) => {
-            const server = ss.servers as {
-              name: string;
-              category: string | null;
-            } | null;
-            return {
-              name: server?.name ?? "Unknown",
-              category: server?.category ?? null,
-            };
-          }),
-          vote_count: voteCount ?? 0,
-        };
-      }),
-    );
-
-    return results;
-  } catch {
-    return [];
-  }
-}
-
-async function getTags() {
-  try {
-    const supabase = await createClient();
-    const { data } = await supabase
-      .from("tags")
-      .select("name, slug")
-      .order("name");
-    return data ?? [];
-  } catch {
-    return [];
-  }
-}
-
 export default async function ExplorePage({
   searchParams,
 }: {
   searchParams: Promise<{ tag?: string }>;
 }) {
   const params = await searchParams;
-  const [stacks, tags] = await Promise.all([getStacks(params.tag), getTags()]);
+  const [stacks, tags] = await Promise.all([
+    getStacks(params.tag),
+    getTags(),
+  ]);
 
   return (
     <div className="px-6 py-12">
