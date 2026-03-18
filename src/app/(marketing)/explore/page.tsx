@@ -19,7 +19,6 @@ async function getStacks(tag?: string): Promise<StackCardData[]> {
       .eq("is_public", true)
       .order("created_at", { ascending: false });
 
-    // If tag filter is specified, join through stack_tags
     if (tag) {
       const { data: tagRow } = await supabase
         .from("tags")
