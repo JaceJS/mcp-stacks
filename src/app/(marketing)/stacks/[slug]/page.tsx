@@ -1,10 +1,9 @@
 import { notFound } from "next/navigation";
-import { VoteButton } from "@/components/VoteButton";
-import { ShareButton } from "@/components/ShareButton";
-import { StackDetailConfig } from "@/components/StackDetailConfig";
-import { getStack } from "@/lib/queries/stacks";
-import { buildEditorConfigs } from "@/lib/config-builder";
-import { getPillClass } from "@/lib/category";
+import { VoteButton } from "@/features/votes/components/VoteButton";
+import { ShareButton } from "@/features/stacks/components/ShareButton";
+import { StackDetailConfig } from "@/features/stacks/components/StackDetailConfig";
+import { getStack } from "@/features/stacks/queries";
+import { buildEditorConfigs, getPillClass } from "@/features/stacks/utils";
 import type { Metadata } from "next";
 
 export async function generateMetadata({

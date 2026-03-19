@@ -1,36 +1,13 @@
-import { createClient } from "@/lib/supabase/server";
-import { CreateStackForm } from "@/components/CreateStackForm";
+import { CreateStackForm } from "@/features/stacks/components/CreateStackForm";
+import { getServersForPicker, getTagsForPicker } from "@/features/stacks/queries";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Share Your Stack",
 };
 
-async function getServers() {
-  try {
-    const supabase = await createClient();
-    const { data } = await supabase
-      .from("servers")
-      .select("id, name, slug, category, npm_package, description")
-      .order("name");
-    return data ?? [];
-  } catch {
-    return [];
-  }
-}
-
-async function getTags() {
-  try {
-    const supabase = await createClient();
-    const { data } = await supabase.from("tags").select("id, name, slug").order("name");
-    return data ?? [];
-  } catch {
-    return [];
-  }
-}
-
 export default async function NewStackPage() {
-  const [servers, tags] = await Promise.all([getServers(), getTags()]);
+  const [servers, tags] = await Promise.all([getServersForPicker(), getTagsForPicker()]);
 
   return (
     <div className="px-6 py-12">

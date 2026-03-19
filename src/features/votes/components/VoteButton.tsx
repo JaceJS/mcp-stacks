@@ -1,7 +1,7 @@
 "use client";
 
 import { useTransition } from "react";
-import { toggleVote } from "@/actions/votes";
+import { toggleVote } from "@/features/votes/actions";
 
 export function VoteButton({
   stackId,

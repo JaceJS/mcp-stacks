@@ -2,10 +2,10 @@ import Link from "next/link";
 import { ConfigPreview } from "@/components/ConfigPreview";
 import { Footer } from "@/components/Footer";
 import { Navbar } from "@/components/Navbar";
-import { StackCard } from "@/components/StackCard";
+import { StackCard } from "@/features/stacks/components/StackCard";
 import { REPO_URL } from "@/lib/constants";
-import { getFeaturedStacks } from "@/lib/queries/stacks";
-import { getSiteStats } from "@/lib/queries/stats";
+import { getFeaturedStacks } from "@/features/stacks/queries";
+import { getSiteStats } from "@/features/stacks/queries";
 
 const steps = [
   {

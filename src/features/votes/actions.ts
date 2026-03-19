@@ -3,10 +3,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
 
-/**
- * Toggle vote on a stack.
- * If the user already voted, removes the vote. Otherwise, adds one.
- */
 export async function toggleVote(stackId: string) {
   const supabase = await createClient();
   const {
@@ -15,7 +11,6 @@ export async function toggleVote(stackId: string) {
 
   if (!user) throw new Error("Unauthorized");
 
-  // Check if vote already exists
   const { data: existingVote } = await supabase
     .from("votes")
     .select("id")
@@ -24,7 +19,6 @@ export async function toggleVote(stackId: string) {
     .single();
 
   if (existingVote) {
-    // Remove vote
     const { error } = await supabase
       .from("votes")
       .delete()
@@ -32,7 +26,6 @@ export async function toggleVote(stackId: string) {
 
     if (error) throw error;
   } else {
-    // Add vote
     const { error } = await supabase.from("votes").insert({
       user_id: user.id,
       stack_id: stackId,

@@ -1,7 +1,7 @@
 import Link from "next/link";
-import { deleteStack } from "@/actions/stacks";
-import { signOut } from "@/actions/auth";
-import { getUserStacks } from "@/lib/queries/stacks";
+import { deleteStack } from "@/features/stacks/actions";
+import { signOut } from "@/features/auth/actions";
+import { getUserStacks } from "@/features/stacks/queries";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {

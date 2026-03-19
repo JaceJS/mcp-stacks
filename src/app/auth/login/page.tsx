@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { signInWithOAuth } from "@/actions/auth";
+import { signInWithOAuth } from "@/features/auth/actions";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {

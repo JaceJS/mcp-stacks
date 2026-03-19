@@ -3,10 +3,8 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
+import { env } from "@/lib/env";
 
-/**
- * Sign in with email & password.
- */
 export async function signIn(formData: FormData) {
   const supabase = await createClient();
 
@@ -21,9 +19,6 @@ export async function signIn(formData: FormData) {
   redirect("/dashboard");
 }
 
-/**
- * Sign up with email & password.
- */
 export async function signUp(formData: FormData) {
   const supabase = await createClient();
 
@@ -34,14 +29,9 @@ export async function signUp(formData: FormData) {
 
   if (error) throw error;
 
-  // Supabase sends a confirmation email by default.
-  // Redirect to a "check your email" page.
   redirect("/auth/verify");
 }
 
-/**
- * Sign out the current user.
- */
 export async function signOut() {
   const supabase = await createClient();
   await supabase.auth.signOut();
@@ -50,10 +40,6 @@ export async function signOut() {
   redirect("/");
 }
 
-/**
- * Sign in with an OAuth provider (GitHub, Google, etc.).
- * Returns the OAuth URL for client-side redirect.
- */
 export async function signInWithOAuth(
   provider: "github" | "google",
   next = "/dashboard",
@@ -64,7 +50,7 @@ export async function signInWithOAuth(
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider,
     options: {
-      redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"}/auth/callback?next=${encodeURIComponent(safeNext)}`,
+      redirectTo: `${env.NEXT_PUBLIC_SITE_URL}/auth/callback?next=${encodeURIComponent(safeNext)}`,
     },
   });
 

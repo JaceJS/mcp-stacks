@@ -1,7 +1,6 @@
 import Link from "next/link";
-import { StackCard } from "@/components/StackCard";
-import { getStacks } from "@/lib/queries/stacks";
-import { getTags } from "@/lib/queries/tags";
+import { StackCard } from "@/features/stacks/components/StackCard";
+import { getStacks, getTags } from "@/features/stacks/queries";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {

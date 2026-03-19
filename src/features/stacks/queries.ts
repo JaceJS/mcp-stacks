@@ -1,5 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
-import type { StackCardData } from "@/components/StackCard";
+import type { StackCardData, StackDetail, UserStack, UserProfile, Tag, SiteStats } from "./types";
 
 type SupabaseClient = Awaited<ReturnType<typeof createClient>>;
 
@@ -10,46 +10,6 @@ type RawStack = {
   description: string | null;
   user_id: string;
   created_at: string;
-};
-
-export type StackDetail = {
-  id: string;
-  title: string;
-  slug: string;
-  description: string | null;
-  config_json: unknown;
-  user: {
-    display_name: string | null;
-    username: string | null;
-    avatar_url: string | null;
-  };
-  servers: {
-    name: string;
-    slug: string;
-    category: string | null;
-    npm_package: string | null;
-    description: string | null;
-  }[];
-  vote_count: number;
-  has_voted: boolean;
-  is_logged_in: boolean;
-};
-
-export type UserStack = {
-  id: string;
-  title: string;
-  slug: string;
-  description: string | null;
-  is_public: boolean;
-  created_at: string;
-  vote_count: number;
-};
-
-export type UserProfile = {
-  email: string | undefined;
-  display_name: string | null | undefined;
-  username: string | null | undefined;
-  avatar_url: string | null | undefined;
 };
 
 async function enrichStackCard(
@@ -269,4 +229,56 @@ export async function getUserStacks(): Promise<{
       avatar_url: profile?.avatar_url,
     },
   };
+}
+
+export async function getTags(): Promise<Tag[]> {
+  try {
+    const supabase = await createClient();
+    const { data } = await supabase
+      .from("tags")
+      .select("name, slug")
+      .order("name");
+    return data ?? [];
+  } catch {
+    return [];
+  }
+}
+
+export async function getSiteStats(): Promise<SiteStats> {
+  try {
+    const supabase = await createClient();
+    const [{ count: stackCount }, { count: userCount }] = await Promise.all([
+      supabase
+        .from("stacks")
+        .select("*", { count: "exact", head: true })
+        .eq("is_public", true),
+      supabase.from("users").select("*", { count: "exact", head: true }),
+    ]);
+    return { stacks: stackCount ?? 0, users: userCount ?? 0 };
+  } catch {
+    return { stacks: 0, users: 0 };
+  }
+}
+
+export async function getServersForPicker() {
+  try {
+    const supabase = await createClient();
+    const { data } = await supabase
+      .from("servers")
+      .select("id, name, slug, category, npm_package, description")
+      .order("name");
+    return data ?? [];
+  } catch {
+    return [];
+  }
+}
+
+export async function getTagsForPicker(): Promise<{ id: string; name: string; slug: string }[]> {
+  try {
+    const supabase = await createClient();
+    const { data } = await supabase.from("tags").select("id, name, slug").order("name");
+    return data ?? [];
+  } catch {
+    return [];
+  }
 }

@@ -2,6 +2,8 @@
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
+import { createStack } from "@/features/stacks/actions";
+import { getPillClass } from "@/features/stacks/utils";
 
 interface Server {
   id: string;
@@ -16,28 +18,6 @@ interface Tag {
   id: string;
   name: string;
   slug: string;
-}
-
-const categoryClass: Record<string, string> = {
-  docs: "pill-docs",
-  documentation: "pill-docs",
-  dev: "pill-dev",
-  "dev-tools": "pill-dev",
-  "dev tools": "pill-dev",
-  development: "pill-dev",
-  database: "pill-database",
-  db: "pill-database",
-  search: "pill-search",
-  monitoring: "pill-monitoring",
-  observability: "pill-monitoring",
-  ai: "pill-ai",
-  cloud: "pill-cloud",
-  infrastructure: "pill-cloud",
-};
-
-function getPillClass(category: string | null) {
-  if (!category) return "pill-default";
-  return categoryClass[category.toLowerCase()] ?? "pill-default";
 }
 
 export function CreateStackForm({
@@ -61,7 +41,7 @@ export function CreateStackForm({
     (s) =>
       !selectedServers.find((ss) => ss.id === s.id) &&
       (s.name.toLowerCase().includes(serverSearch.toLowerCase()) ||
-        (s.category ?? "").toLowerCase().includes(serverSearch.toLowerCase()))
+        (s.category ?? "").toLowerCase().includes(serverSearch.toLowerCase())),
   );
 
   function addServer(server: Server) {
@@ -75,11 +55,10 @@ export function CreateStackForm({
 
   function toggleTag(tagId: string) {
     setSelectedTags((prev) =>
-      prev.includes(tagId) ? prev.filter((t) => t !== tagId) : [...prev, tagId]
+      prev.includes(tagId) ? prev.filter((t) => t !== tagId) : [...prev, tagId],
     );
   }
 
-  // Build preview config
   const previewConfig: Record<string, unknown> = {};
   for (const server of selectedServers) {
     const key = server.slug || server.name.toLowerCase().replace(/\s+/g, "-");
@@ -111,19 +90,8 @@ export function CreateStackForm({
         formData.set("tag_ids", JSON.stringify(selectedTags));
         formData.set("config_json", JSON.stringify({ mcpServers: previewConfig }));
 
-        const res = await fetch("/api/stacks", {
-          method: "POST",
-          body: formData,
-        });
-
-        if (!res.ok) {
-          const data = await res.json();
-          setError(data.error ?? "Failed to create stack");
-          return;
-        }
-
-        const { slug } = await res.json();
-        router.push(`/stacks/${slug}`);
+        const result = await createStack(formData);
+        router.push(`/stacks/${result.slug}`);
       } catch {
         setError("Something went wrong. Please try again.");
       }

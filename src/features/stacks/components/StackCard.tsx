@@ -1,15 +1,6 @@
 import Link from "next/link";
-import { getPillClass } from "@/lib/category";
-
-export interface StackCardData {
-  id: string;
-  title: string;
-  slug: string;
-  description: string | null;
-  user: { display_name: string | null; username: string | null };
-  servers: { name: string; category: string | null }[];
-  vote_count: number;
-}
+import { getPillClass } from "@/features/stacks/utils";
+import type { StackCardData } from "@/features/stacks/types";
 
 export function StackCard({ stack }: { stack: StackCardData }) {
   return (
