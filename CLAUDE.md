@@ -46,6 +46,31 @@ src/
 
 ## Rules
 
+### Tailwind CSS v4 — Color Token Usage
+
+`globals.css` mendefinisikan warna di `@theme inline` sebagai `--color-*`, sehingga Tailwind v4 otomatis mengekspos token tersebut sebagai utility class.
+
+**SELALU gunakan nama token langsung — JANGAN pakai `[--variable]` syntax untuk warna yang sudah terdaftar:**
+
+```
+✅  bg-accent          border-border         text-muted
+✅  bg-accent/10       border-border-hover   text-subtle
+✅  hover:bg-accent    hover:border-accent   hover:text-accent
+
+❌  bg-[--accent]      border-[--border]     text-[--foreground-muted]
+❌  bg-[--accent]/10   (opacity modifier tidak bekerja dengan sintaks ini)
+```
+
+Token yang tersedia (dari `@theme inline`):
+- **bg / text / border**: `background`, `surface`, `surface-elevated`, `card`, `card-hover`
+- **text**: `foreground`, `muted`, `subtle`, `accent`, `accent-dim`
+- **border**: `border`, `border-hover`, `border-accent`
+- **accent**: `accent`, `accent-dim`, `accent-glow`, `accent-glow-strong`
+
+Untuk warna kategori (cat-docs, cat-dev, dll) yang **tidak** ada di `@theme`, gunakan CSS inline style atau class `.pill-*` yang sudah didefinisikan di `globals.css`.
+
+---
+
 ### Code Quality
 
 - Write clean, readable code. Prioritize clarity over cleverness

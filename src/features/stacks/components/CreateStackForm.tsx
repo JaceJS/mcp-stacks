@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { createStack } from "@/features/stacks/actions";
+import { createStack, updateStack } from "@/features/stacks/actions";
 import { getPillClass } from "@/features/stacks/utils";
 
 interface Server {
@@ -20,21 +20,36 @@ interface Tag {
   slug: string;
 }
 
+interface CreateStackFormProps {
+  servers: Server[];
+  tags: Tag[];
+  mode?: "create" | "edit";
+  stackId?: string;
+  initialTitle?: string;
+  initialDescription?: string;
+  initialServers?: Server[];
+  initialTagIds?: string[];
+  initialConfigJson?: unknown;
+}
+
 export function CreateStackForm({
   servers,
   tags,
-}: {
-  servers: Server[];
-  tags: Tag[];
-}) {
+  mode = "create",
+  stackId,
+  initialTitle = "",
+  initialDescription = "",
+  initialServers = [],
+  initialTagIds = [],
+}: CreateStackFormProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
 
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [selectedServers, setSelectedServers] = useState<Server[]>([]);
-  const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const [title, setTitle] = useState(() => initialTitle);
+  const [description, setDescription] = useState(() => initialDescription);
+  const [selectedServers, setSelectedServers] = useState<Server[]>(() => initialServers);
+  const [selectedTags, setSelectedTags] = useState<string[]>(() => initialTagIds);
   const [serverSearch, setServerSearch] = useState("");
 
   const filteredServers = servers.filter(
@@ -90,8 +105,12 @@ export function CreateStackForm({
         formData.set("tag_ids", JSON.stringify(selectedTags));
         formData.set("config_json", JSON.stringify({ mcpServers: previewConfig }));
 
-        const result = await createStack(formData);
-        router.push(`/stacks/${result.slug}`);
+        if (mode === "edit" && stackId) {
+          await updateStack(stackId, formData);
+        } else {
+          const result = await createStack(formData);
+          router.push(`/stacks/${result.slug}`);
+        }
       } catch {
         setError("Something went wrong. Please try again.");
       }
@@ -245,7 +264,13 @@ export function CreateStackForm({
           disabled={isPending}
           className={`btn-primary w-full justify-center ${isPending ? "opacity-50" : ""}`}
         >
-          {isPending ? "Publishing..." : "Publish stack"}
+          {isPending
+            ? mode === "edit"
+              ? "Updating..."
+              : "Publishing..."
+            : mode === "edit"
+              ? "Update stack"
+              : "Publish stack"}
         </button>
       </div>
 

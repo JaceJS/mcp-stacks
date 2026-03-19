@@ -2,6 +2,7 @@
 
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 import { slugify } from "@/lib/utils";
 import type { Json } from "@/types/database";
 
@@ -71,7 +72,7 @@ export async function updateStack(stackId: string, formData: FormData) {
 
   if (!user) throw new Error("Unauthorized");
 
-  const { error } = await supabase
+  const { data: stack, error } = await supabase
     .from("stacks")
     .update({
       title: formData.get("title") as string,
@@ -81,12 +82,40 @@ export async function updateStack(stackId: string, formData: FormData) {
       ) as Json,
     })
     .eq("id", stackId)
-    .eq("user_id", user.id);
+    .eq("user_id", user.id)
+    .select("slug")
+    .single();
 
   if (error) throw error;
 
+  const serverIds: string[] = JSON.parse(
+    (formData.get("server_ids") as string) || "[]",
+  );
+  const tagIds: string[] = JSON.parse(
+    (formData.get("tag_ids") as string) || "[]",
+  );
+
+  await supabase.from("stack_servers").delete().eq("stack_id", stackId);
+  if (serverIds.length) {
+    await supabase.from("stack_servers").insert(
+      serverIds.map((server_id, position) => ({
+        stack_id: stackId,
+        server_id,
+        position,
+      })),
+    );
+  }
+
+  await supabase.from("stack_tags").delete().eq("stack_id", stackId);
+  if (tagIds.length) {
+    await supabase.from("stack_tags").insert(
+      tagIds.map((tag_id) => ({ stack_id: stackId, tag_id })),
+    );
+  }
+
   revalidatePath("/explore");
-  revalidatePath(`/stacks/${stackId}`);
+  revalidatePath("/dashboard");
+  redirect(`/stacks/${stack.slug}`);
 }
 
 export async function deleteStack(stackId: string) {

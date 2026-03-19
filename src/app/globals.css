@@ -403,6 +403,13 @@ a {
     background-clip: text;
   }
 
+  .pagination-active {
+    @apply w-9 h-9 rounded-lg font-mono text-[13px] font-semibold flex items-center justify-center;
+    background: var(--accent);
+    color: var(--bg-primary);
+    box-shadow: 0 0 10px rgba(110, 231, 160, 0.45), 0 0 22px rgba(110, 231, 160, 0.2);
+  }
+
   .divider {
     @apply h-px;
     background: linear-gradient(to right, transparent, var(--border-hover), transparent);
