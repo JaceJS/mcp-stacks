@@ -15,7 +15,7 @@ export async function GET(request: Request) {
   let next = searchParams.get("next") ?? "/dashboard";
 
   // Prevent open redirect attacks
-  if (!next.startsWith("/")) {
+  if (!next.startsWith("/") || next.startsWith("//")) {
     next = "/dashboard";
   }
 

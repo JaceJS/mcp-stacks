@@ -45,7 +45,7 @@ export async function signInWithOAuth(
   next = "/dashboard",
 ) {
   const supabase = await createClient();
-  const safeNext = next.startsWith("/") ? next : "/dashboard";
+  const safeNext = next.startsWith("/") && !next.startsWith("//") ? next : "/dashboard";
 
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider,
