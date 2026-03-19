@@ -48,8 +48,12 @@ export function CreateStackForm({
 
   const [title, setTitle] = useState(() => initialTitle);
   const [description, setDescription] = useState(() => initialDescription);
-  const [selectedServers, setSelectedServers] = useState<Server[]>(() => initialServers);
-  const [selectedTags, setSelectedTags] = useState<string[]>(() => initialTagIds);
+  const [selectedServers, setSelectedServers] = useState<Server[]>(
+    () => initialServers,
+  );
+  const [selectedTags, setSelectedTags] = useState<string[]>(
+    () => initialTagIds,
+  );
   const [serverSearch, setServerSearch] = useState("");
 
   const filteredServers = servers.filter(
@@ -101,9 +105,15 @@ export function CreateStackForm({
         const formData = new FormData();
         formData.set("title", title);
         formData.set("description", description);
-        formData.set("server_ids", JSON.stringify(selectedServers.map((s) => s.id)));
+        formData.set(
+          "server_ids",
+          JSON.stringify(selectedServers.map((s) => s.id)),
+        );
         formData.set("tag_ids", JSON.stringify(selectedTags));
-        formData.set("config_json", JSON.stringify({ mcpServers: previewConfig }));
+        formData.set(
+          "config_json",
+          JSON.stringify({ mcpServers: previewConfig }),
+        );
 
         if (mode === "edit" && stackId) {
           await updateStack(stackId, formData);
@@ -123,10 +133,7 @@ export function CreateStackForm({
       <div className="lg:col-span-3 space-y-6">
         {/* Title */}
         <div>
-          <label
-            htmlFor="title"
-            className="block text-[13px] font-medium mb-2"
-          >
+          <label htmlFor="title" className="block text-[13px] font-medium mb-2">
             Stack name
           </label>
           <input
@@ -205,7 +212,7 @@ export function CreateStackForm({
                           {server.name}
                         </div>
                         {server.description && (
-                          <div className="text-[12px] text-muted mt-0.5">
+                          <div className="text-[12px] text-foreground-muted mt-0.5">
                             {server.description}
                           </div>
                         )}
@@ -223,10 +230,8 @@ export function CreateStackForm({
           ) : (
             <p className="text-[13px] text-subtle py-3">
               No servers in the database yet. Add servers to the{" "}
-              <code className="font-mono text-accent">
-                servers
-              </code>{" "}
-              table in Supabase to enable selection.
+              <code className="font-mono text-accent">servers</code> table in
+              Supabase to enable selection.
             </p>
           )}
         </div>
@@ -234,9 +239,7 @@ export function CreateStackForm({
         {/* Tags */}
         {tags.length > 0 && (
           <div>
-            <label className="block text-[13px] font-medium mb-2">
-              Tags
-            </label>
+            <label className="block text-[13px] font-medium mb-2">Tags</label>
             <div className="flex flex-wrap gap-2">
               {tags.map((tag) => (
                 <button
@@ -277,7 +280,7 @@ export function CreateStackForm({
       {/* Preview */}
       <div className="lg:col-span-2">
         <div className="sticky top-24">
-          <h3 className="text-[13px] font-medium text-muted mb-3 uppercase tracking-wider">
+          <h3 className="text-[13px] font-medium text-foreground-muted mb-3 uppercase tracking-wider">
             Preview
           </h3>
 
@@ -286,7 +289,7 @@ export function CreateStackForm({
             <h4 className="font-semibold text-[16px] mb-2">
               {title || "Stack name"}
             </h4>
-            <p className="text-[13px] text-muted mb-4">
+            <p className="text-[13px] text-foreground-muted mb-4">
               {description || "Your stack description will appear here..."}
             </p>
             {selectedServers.length > 0 && (
@@ -308,7 +311,7 @@ export function CreateStackForm({
           {selectedServers.length > 0 && (
             <div className="code-block">
               <div className="px-4 py-2 border-b border-border">
-                <span className="font-mono text-[11px] text-subtle">
+                <span className="font-mono text-[11px] text-accent">
                   Generated config
                 </span>
               </div>
@@ -316,7 +319,7 @@ export function CreateStackForm({
                 className="font-mono overflow-auto"
                 style={{ fontSize: 12, lineHeight: 1.6, padding: "16px" }}
               >
-                <code className="text-muted">
+                <code className="text-foreground-muted">
                   {JSON.stringify({ mcpServers: previewConfig }, null, 2)}
                 </code>
               </pre>

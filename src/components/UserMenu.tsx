@@ -27,14 +27,14 @@ export function UserMenu({
     <div ref={ref} className="relative">
       <button
         onClick={() => setOpen((o) => !o)}
-        className="flex h-7 w-7 items-center justify-center rounded-full bg-accent/20
-                   text-[11px] font-semibold text-accent hover:bg-accent/30 transition-colors overflow-hidden hover:cursor-pointer"
+        className="flex h-9 w-9 items-center justify-center rounded-full bg-accent/20
+                   text-sm font-semibold text-accent hover:bg-accent/30 transition-colors overflow-hidden hover:cursor-pointer"
       >
         {avatarUrl ? (
           <img
             src={avatarUrl}
             alt={initials}
-            className="h-7 w-7 rounded-full object-cover"
+            className="h-9 w-9 rounded-full object-cover"
           />
         ) : (
           initials
@@ -43,7 +43,7 @@ export function UserMenu({
 
       {open && (
         <div
-          className="absolute right-0 top-9 z-50 min-w-[160px] rounded-xl border border-border
+          className="absolute right-0 top-11 z-50 min-w-[160px] rounded-xl border border-border
                      bg-surface-elevated p-1 shadow-lg"
         >
           <Link

@@ -50,18 +50,23 @@ export default async function StackDetailPage({
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
     name: stack.title,
-    description: stack.description ?? `A curated MCP server stack with ${stack.servers.length} servers.`,
+    description:
+      stack.description ??
+      `A curated MCP server stack with ${stack.servers.length} servers.`,
     applicationCategory: "DeveloperApplication",
     operatingSystem: "Any",
     author: {
       "@type": "Person",
       name: stack.user.display_name ?? stack.user.username ?? "anon",
     },
-    aggregateRating: stack.vote_count > 0 ? {
-      "@type": "AggregateRating",
-      ratingValue: "5",
-      ratingCount: stack.vote_count,
-    } : undefined,
+    aggregateRating:
+      stack.vote_count > 0
+        ? {
+            "@type": "AggregateRating",
+            ratingValue: "5",
+            ratingCount: stack.vote_count,
+          }
+        : undefined,
   };
 
   return (
@@ -70,11 +75,11 @@ export default async function StackDetailPage({
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <div className="mx-auto max-w-4xl">
+      <div className="mx-auto max-w-7xl">
         {/* Back link */}
         <a
           href="/explore"
-          className="inline-flex items-center gap-1.5 text-[13px] text-[--foreground-subtle] hover:text-[--foreground-muted] transition-colors mb-8"
+          className="inline-flex items-center gap-1.5 text-[13px] text-foreground hover:text-accent transition-colors mb-8"
         >
           <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
             <path
@@ -95,14 +100,14 @@ export default async function StackDetailPage({
           </h1>
           <div className="flex items-center gap-3 mb-4">
             <span
-              className="text-[13px] text-[--foreground-subtle]"
+              className="text-[13px] text-foreground"
               style={{ fontFamily: "var(--font-code)" }}
             >
               by {stack.user.display_name ?? stack.user.username ?? "anon"}
             </span>
           </div>
           {stack.description && (
-            <p className="text-[--foreground-muted] leading-relaxed max-w-2xl">
+            <p className="text-foreground leading-relaxed max-w-2xl">
               {stack.description}
             </p>
           )}
@@ -137,13 +142,13 @@ export default async function StackDetailPage({
                 <div className="flex-1 min-w-0">
                   <div className="font-medium text-[14px]">{server.name}</div>
                   {server.description && (
-                    <p className="text-[12px] text-[--foreground-muted] mt-1 leading-relaxed">
+                    <p className="text-[12px] text-foreground mt-1 leading-relaxed">
                       {server.description}
                     </p>
                   )}
                   {server.npm_package && (
                     <code
-                      className="text-[11px] text-[--foreground-subtle] mt-1 block"
+                      className="text-[11px] text-foreground mt-1 block"
                       style={{ fontFamily: "var(--font-code)" }}
                     >
                       {server.npm_package}

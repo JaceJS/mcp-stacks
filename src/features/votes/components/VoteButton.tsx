@@ -30,10 +30,10 @@ export function VoteButton({
     <button
       onClick={handleVote}
       disabled={isPending}
-      className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-lg border text-[13px] font-medium transition-all cursor-pointer ${
+      className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-lg border text-[13px] font-medium transition-all duration-300 cursor-pointer ${
         hasVoted
-          ? "border-[var(--border-accent)] bg-[var(--accent-glow)] text-[var(--accent)]"
-          : "border-[var(--border)] text-[var(--foreground-muted)] hover:border-[var(--border-accent)] hover:text-[var(--accent)] hover:bg-[var(--accent-glow)]"
+          ? "border-accent bg-accent text-background shadow-[0_0_16px_var(--accent-glow-strong)]"
+          : "border-accent/50 text-accent hover:border-accent hover:bg-accent/10 hover:shadow-[0_0_16px_var(--accent-glow-strong)]"
       } ${isPending ? "opacity-50" : ""}`}
     >
       <svg width="14" height="14" viewBox="0 0 16 16" fill={hasVoted ? "currentColor" : "none"}>

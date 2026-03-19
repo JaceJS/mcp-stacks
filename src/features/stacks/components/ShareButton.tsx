@@ -13,19 +13,9 @@ export function ShareButton({ slug, title }: { slug: string; title: string }) {
     setTimeout(() => setCopied(false), 2000);
   }
 
-  function handleShareTwitter() {
-    const text = encodeURIComponent(
-      `Check out "${title}" on MCP Stacks — a curated MCP server combo:\n${url}`,
-    );
-    window.open(`https://twitter.com/intent/tweet?text=${text}`, "_blank");
-  }
-
   return (
     <div className="flex items-center gap-2">
-      <button
-        onClick={handleCopyLink}
-        className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg border border-(--border) text-[13px] text-(--foreground-muted) hover:border-(--border-hover) hover:text-(--foreground) transition-all cursor-pointer bg-transparent"
-      >
+      <button className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg border border-white/50 text-[13px] text-foreground hover:border-white hover:text-foreground transition-all cursor-pointer bg-transparent">
         <svg
           width="14"
           height="14"
@@ -40,10 +30,7 @@ export function ShareButton({ slug, title }: { slug: string; title: string }) {
         </svg>
         {copied ? "Copied!" : "Copy link"}
       </button>
-      <button
-        onClick={handleShareTwitter}
-        className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg border border-(--border) text-[13px] text-(--foreground-muted) hover:border-(--border-hover) hover:text-(--foreground) transition-all cursor-pointer bg-transparent"
-      >
+      <button className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg border border-white/50 text-[13px] text-foreground hover:border-white hover:text-foreground transition-all cursor-pointer bg-transparent">
         <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
           <path d="M9.294 6.928L14.357 1h-1.2L8.762 6.147 5.25 1H1.2l5.31 7.784L1.2 15h1.2l4.642-5.436L10.75 15h4.05L9.294 6.928zM7.593 8.93l-.538-.776L2.864 1.91h1.843l3.455 4.977.538.776 4.493 6.475h-1.843L7.593 8.93z" />
         </svg>

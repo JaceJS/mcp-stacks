@@ -1,5 +1,9 @@
 import { notFound } from "next/navigation";
-import { getStackForEdit, getServersForPicker, getTagsForPicker } from "@/features/stacks/queries";
+import {
+  getStackForEdit,
+  getServersForPicker,
+  getTagsForPicker,
+} from "@/features/stacks/queries";
 import { CreateStackForm } from "@/features/stacks/components/CreateStackForm";
 import type { Metadata } from "next";
 
@@ -27,12 +31,12 @@ export default async function EditStackPage({
 
   return (
     <div className="px-6 py-12">
-      <div className="mx-auto max-w-5xl">
+      <div className="mx-auto max-w-7xl">
         <div className="mb-8">
           <h1 className="text-2xl sm:text-3xl font-bold tracking-tight mb-1">
             Edit stack
           </h1>
-          <p className="text-[14px] text-muted">
+          <p className="text-[14px] text-foreground-muted">
             Update your stack configuration.
           </p>
         </div>

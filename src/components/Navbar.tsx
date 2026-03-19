@@ -80,7 +80,7 @@ export async function Navbar() {
           </Link>
           <Link
             href="/explore"
-            className="text-[13px] text-foreground-subtle transition-colors hover:text-accent"
+            className="text-sm font-semibold text-foreground-subtle transition-colors hover:text-accent"
           >
             Browse
           </Link>
@@ -96,13 +96,13 @@ export async function Navbar() {
             <>
               <Link
                 href="/login"
-                className="text-[13px] text-foreground-subtle transition-colors hover:text-accent"
+                className="text-sm font-semibold text-foreground-subtle transition-colors hover:text-accent"
               >
                 Sign in
               </Link>
               <Link
                 href="/login?next=/stacks/new"
-                className="btn-primary rounded-lg! px-5! py-2! text-[13px]"
+                className="btn-primary rounded-lg! px-5! py-2! text-sm font-semibold"
               >
                 Share your stack
               </Link>
