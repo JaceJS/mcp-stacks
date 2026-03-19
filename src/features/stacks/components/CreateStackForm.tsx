@@ -116,7 +116,7 @@ export function CreateStackForm({
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder="e.g., Full-Stack AI Developer"
-            className="w-full px-4 py-3 rounded-xl bg-[var(--bg-secondary)] border border-[var(--border)] text-[14px] placeholder:text-[var(--foreground-subtle)] focus:outline-none focus:border-[var(--accent)] transition-colors"
+            className="w-full px-4 py-3 rounded-xl bg-surface border border-border text-[14px] placeholder:text-subtle focus:outline-none focus:border-accent transition-colors"
           />
         </div>
 
@@ -134,7 +134,7 @@ export function CreateStackForm({
             onChange={(e) => setDescription(e.target.value)}
             placeholder="What's this stack for? Who should use it?"
             rows={3}
-            className="w-full px-4 py-3 rounded-xl bg-[var(--bg-secondary)] border border-[var(--border)] text-[14px] placeholder:text-[var(--foreground-subtle)] focus:outline-none focus:border-[var(--accent)] transition-colors resize-none"
+            className="w-full px-4 py-3 rounded-xl bg-surface border border-border text-[14px] placeholder:text-subtle focus:outline-none focus:border-accent transition-colors resize-none"
           />
         </div>
 
@@ -171,22 +171,22 @@ export function CreateStackForm({
                 value={serverSearch}
                 onChange={(e) => setServerSearch(e.target.value)}
                 placeholder="Search servers..."
-                className="w-full px-4 py-3 rounded-xl bg-[var(--bg-secondary)] border border-[var(--border)] text-[14px] placeholder:text-[var(--foreground-subtle)] focus:outline-none focus:border-[var(--accent)] transition-colors"
+                className="w-full px-4 py-3 rounded-xl bg-surface border border-border text-[14px] placeholder:text-subtle focus:outline-none focus:border-accent transition-colors"
               />
               {serverSearch && filteredServers.length > 0 && (
-                <div className="absolute top-full left-0 right-0 mt-2 rounded-xl bg-[var(--bg-secondary)] border border-[var(--border)] overflow-hidden z-10 max-h-60 overflow-y-auto">
+                <div className="absolute top-full left-0 right-0 mt-2 rounded-xl bg-surface border border-border overflow-hidden z-10 max-h-60 overflow-y-auto">
                   {filteredServers.slice(0, 10).map((server) => (
                     <button
                       key={server.id}
                       onClick={() => addServer(server)}
-                      className="w-full text-left px-4 py-3 hover:bg-[var(--bg-tertiary)] transition-colors flex items-center justify-between cursor-pointer border-none bg-transparent text-[var(--foreground)]"
+                      className="w-full text-left px-4 py-3 hover:bg-surface-elevated transition-colors flex items-center justify-between cursor-pointer border-none bg-transparent text-foreground"
                     >
                       <div>
                         <div className="text-[14px] font-medium">
                           {server.name}
                         </div>
                         {server.description && (
-                          <div className="text-[12px] text-[var(--foreground-muted)] mt-0.5">
+                          <div className="text-[12px] text-muted mt-0.5">
                             {server.description}
                           </div>
                         )}
@@ -202,12 +202,9 @@ export function CreateStackForm({
               )}
             </div>
           ) : (
-            <p className="text-[13px] text-[var(--foreground-subtle)] py-3">
+            <p className="text-[13px] text-subtle py-3">
               No servers in the database yet. Add servers to the{" "}
-              <code
-                className="text-[var(--accent)]"
-                style={{ fontFamily: "var(--font-code)" }}
-              >
+              <code className="font-mono text-accent">
                 servers
               </code>{" "}
               table in Supabase to enable selection.
@@ -255,7 +252,7 @@ export function CreateStackForm({
       {/* Preview */}
       <div className="lg:col-span-2">
         <div className="sticky top-24">
-          <h3 className="text-[13px] font-medium text-[var(--foreground-muted)] mb-3 uppercase tracking-wider">
+          <h3 className="text-[13px] font-medium text-muted mb-3 uppercase tracking-wider">
             Preview
           </h3>
 
@@ -264,7 +261,7 @@ export function CreateStackForm({
             <h4 className="font-semibold text-[16px] mb-2">
               {title || "Stack name"}
             </h4>
-            <p className="text-[13px] text-[var(--foreground-muted)] mb-4">
+            <p className="text-[13px] text-muted mb-4">
               {description || "Your stack description will appear here..."}
             </p>
             {selectedServers.length > 0 && (
@@ -285,24 +282,16 @@ export function CreateStackForm({
           {/* Config preview */}
           {selectedServers.length > 0 && (
             <div className="code-block">
-              <div className="px-4 py-2 border-b border-[var(--border)]">
-                <span
-                  className="text-[11px] text-[var(--foreground-subtle)]"
-                  style={{ fontFamily: "var(--font-code)" }}
-                >
+              <div className="px-4 py-2 border-b border-border">
+                <span className="font-mono text-[11px] text-subtle">
                   Generated config
                 </span>
               </div>
               <pre
-                style={{
-                  fontFamily: "var(--font-code)",
-                  fontSize: 12,
-                  lineHeight: 1.6,
-                  padding: "16px",
-                  overflow: "auto",
-                }}
+                className="font-mono overflow-auto"
+                style={{ fontSize: 12, lineHeight: 1.6, padding: "16px" }}
               >
-                <code className="text-[var(--foreground-muted)]">
+                <code className="text-muted">
                   {JSON.stringify({ mcpServers: previewConfig }, null, 2)}
                 </code>
               </pre>

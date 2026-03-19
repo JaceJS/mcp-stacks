@@ -271,7 +271,7 @@ export default async function Home() {
 
       <section className="relative z-10 px-6 pb-32">
         <div className="mx-auto max-w-5xl">
-          <div className="grid items-center gap-12 md:grid-cols-2">
+          <div className="grid items-center gap-12 md:grid-cols-[5fr_7fr]">
             <div>
               <h2 className="animate-fade-up mb-5 text-3xl font-bold tracking-tight sm:text-4xl">
                 One config.

@@ -27,8 +27,8 @@ export function StackDetailConfig({
 
   return (
     <div className="code-block">
-      <div className="flex items-center justify-between border-b border-[var(--border)] pl-2 pr-3">
-        <div className="flex overflow-x-auto">
+      <div className="relative border-b border-border pl-2 pr-20">
+        <div className="flex flex-wrap">
           {editors.map((editor) => (
             <button
               key={editor.key}
@@ -41,13 +41,16 @@ export function StackDetailConfig({
         </div>
         <button
           onClick={handleCopy}
-          className="ml-2 shrink-0 cursor-pointer rounded border border-border bg-transparent px-2.5 py-1 font-mono text-[11px] text-muted transition-all hover:border-accent hover:text-accent"
+          className="absolute right-3 top-2 shrink-0 cursor-pointer rounded border border-border bg-transparent px-2.5 py-1 font-mono text-[11px] text-muted transition-all hover:border-accent hover:text-accent"
         >
           {copied ? "Copied!" : "Copy"}
         </button>
       </div>
-      <pre style={{ fontFamily: "var(--font-code)", fontSize: 13, lineHeight: 1.7, padding: "20px 24px", overflowX: "hidden", whiteSpace: "pre-wrap", wordBreak: "break-all" }}>
-        <code className="text-[var(--foreground-muted)]">
+      <pre
+        className="font-mono"
+        style={{ fontSize: 13, lineHeight: 1.7, padding: "20px 24px", overflowX: "hidden", whiteSpace: "pre-wrap", wordBreak: "break-all" }}
+      >
+        <code className="text-muted">
           {configs[activeEditor]}
         </code>
       </pre>

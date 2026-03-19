@@ -14,7 +14,15 @@ const editors: { key: EditorKey; label: string }[] = [
 const configs: Record<EditorKey, { lines: TokenLine[] }> = {
   claude: {
     lines: [
-      { tokens: [{ type: "comment", value: "// ~/Library/Application Support/Claude/claude_desktop_config.json" }] },
+      {
+        tokens: [
+          {
+            type: "comment",
+            value:
+              "// ~/Library/Application Support/Claude/claude_desktop_config.json",
+          },
+        ],
+      },
       { tokens: [{ type: "bracket", value: "{" }] },
       {
         tokens: [
@@ -220,9 +228,7 @@ const configs: Record<EditorKey, { lines: TokenLine[] }> = {
   vscode: {
     lines: [
       {
-        tokens: [
-          { type: "comment", value: "// .vscode/mcp.json" },
-        ],
+        tokens: [{ type: "comment", value: "// .vscode/mcp.json" }],
       },
       { tokens: [{ type: "bracket", value: "{" }] },
       {
@@ -325,7 +331,14 @@ const configs: Record<EditorKey, { lines: TokenLine[] }> = {
   },
   antigravity: {
     lines: [
-      { tokens: [{ type: "comment", value: "// ~/.gemini/antigravity/mcp_config.json" }] },
+      {
+        tokens: [
+          {
+            type: "comment",
+            value: "// ~/.gemini/antigravity/mcp_config.json",
+          },
+        ],
+      },
       { tokens: [{ type: "bracket", value: "{" }] },
       {
         tokens: [
@@ -459,8 +472,8 @@ export function ConfigPreview() {
   return (
     <div className="code-block animate-float">
       {/* Tab bar */}
-      <div className="flex items-center justify-between border-b border-border pl-2 pr-3">
-        <div className="flex overflow-x-auto">
+      <div className="relative border-b border-border">
+        <div className="flex flex-wrap pl-2 pr-20">
           {editors.map((editor) => (
             <button
               key={editor.key}
@@ -473,7 +486,7 @@ export function ConfigPreview() {
         </div>
         <button
           onClick={handleCopy}
-          className="ml-2 shrink-0 cursor-pointer rounded border border-border bg-transparent px-2.5 py-1 font-mono text-[11px] text-muted transition-all hover:border-accent hover:text-accent"
+          className="absolute right-3 top-2 cursor-pointer rounded border border-border bg-transparent px-2.5 py-1 font-mono text-[11px] text-muted transition-all hover:border-accent hover:text-accent"
         >
           {copied ? "Copied!" : "Copy"}
         </button>
