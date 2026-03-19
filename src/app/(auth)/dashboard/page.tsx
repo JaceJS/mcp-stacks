@@ -20,18 +20,21 @@ export default async function DashboardPage() {
             <h1 className="text-2xl sm:text-3xl font-bold tracking-tight mb-1">
               Dashboard
             </h1>
-            <p className="text-[14px] text-[var(--foreground-muted)]">
+            <p className="text-[14px] text-muted">
               {user?.display_name ?? user?.email ?? "Your account"}
             </p>
           </div>
           <div className="flex items-center gap-3">
-            <Link href="/stacks/new" className="btn-primary !py-2 !px-5 !text-[13px]">
+            <Link
+              href="/stacks/new"
+              className="btn-primary py-2! px-5! text-[13px]!"
+            >
               New stack
             </Link>
             <form>
               <button
                 formAction={signOut}
-                className="text-[13px] text-[var(--foreground-subtle)] hover:text-[var(--foreground-muted)] transition-colors cursor-pointer bg-transparent border-none"
+                className="text-[13px] text-subtle hover:text-muted transition-colors cursor-pointer bg-transparent border-none"
               >
                 Sign out
               </button>
@@ -51,7 +54,7 @@ export default async function DashboardPage() {
                   <div className="flex items-center gap-3 mb-1">
                     <Link
                       href={`/stacks/${stack.slug}`}
-                      className="font-semibold text-[15px] hover:text-[var(--accent)] transition-colors truncate"
+                      className="font-semibold text-[15px] hover:text-accent transition-colors truncate"
                     >
                       {stack.title}
                     </Link>
@@ -62,19 +65,19 @@ export default async function DashboardPage() {
                     </span>
                   </div>
                   {stack.description && (
-                    <p className="text-[13px] text-[var(--foreground-muted)] truncate">
+                    <p className="text-[13px] text-muted truncate">
                       {stack.description}
                     </p>
                   )}
                   <div className="flex items-center gap-4 mt-2">
                     <span
-                      className="text-[11px] text-[var(--foreground-subtle)]"
+                      className="text-[11px] text-subtle"
                       style={{ fontFamily: "var(--font-code)" }}
                     >
                       {stack.vote_count} upvotes
                     </span>
                     <span
-                      className="text-[11px] text-[var(--foreground-subtle)]"
+                      className="text-[11px] text-subtle"
                       style={{ fontFamily: "var(--font-code)" }}
                     >
                       {new Date(stack.created_at).toLocaleDateString()}
@@ -85,7 +88,7 @@ export default async function DashboardPage() {
                 <div className="flex items-center gap-2 shrink-0">
                   <Link
                     href={`/stacks/${stack.slug}`}
-                    className="text-[12px] px-3 py-1.5 rounded-lg border border-[var(--border)] text-[var(--foreground-muted)] hover:border-[var(--border-hover)] transition-colors"
+                    className="text-[12px] px-3 py-1.5 rounded-lg border border-border text-muted hover:border-border-hover transition-colors"
                   >
                     View
                   </Link>
@@ -95,7 +98,7 @@ export default async function DashboardPage() {
                         "use server";
                         await deleteStack(stack.id);
                       }}
-                      className="text-[12px] px-3 py-1.5 rounded-lg border border-[var(--border)] text-[var(--cat-monitoring)] hover:border-[var(--cat-monitoring)] hover:bg-[rgba(251,113,133,0.08)] transition-colors cursor-pointer bg-transparent"
+                      className="text-[12px] px-3 py-1.5 rounded-lg border border-[--border] text-[--cat-monitoring] hover:border-[--cat-monitoring] hover:bg-[rgba(251,113,133,0.08)] transition-colors cursor-pointer bg-transparent"
                     >
                       Delete
                     </button>
@@ -106,13 +109,22 @@ export default async function DashboardPage() {
           </div>
         ) : (
           <div className="text-center py-20">
-            <div className="w-16 h-16 rounded-2xl bg-[var(--bg-tertiary)] border border-[var(--border)] flex items-center justify-center mx-auto mb-5">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--foreground-subtle)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <div className="w-16 h-16 rounded-2xl bg-surface-elevated border border-border flex items-center justify-center mx-auto mb-5">
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="var(--foreground-subtle)"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
                 <path d="M12 5v14M5 12h14" />
               </svg>
             </div>
             <h3 className="text-lg font-semibold mb-2">No stacks yet</h3>
-            <p className="text-[14px] text-[var(--foreground-muted)] mb-6">
+            <p className="text-[14px] text-muted mb-6">
               Create your first stack and share it with the community.
             </p>
             <Link href="/stacks/new" className="btn-primary">
