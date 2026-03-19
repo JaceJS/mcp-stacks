@@ -20,8 +20,6 @@ create policy "servers: public read"
   on public.servers for select
   using (true);
 
--- Only service role can insert/update/delete servers (via Supabase dashboard or admin scripts)
-
 -- ─── tags ──────────────────────────────────────────────────────────────────
 alter table public.tags enable row level security;
 

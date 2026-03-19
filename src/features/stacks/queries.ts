@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import { logger } from "@/lib/logger";
 import type { StackCardData, StackDetail, UserStack, UserProfile, Tag, SiteStats } from "./types";
 
 type SupabaseClient = Awaited<ReturnType<typeof createClient>>;
@@ -62,16 +63,15 @@ export async function getFeaturedStacks(): Promise<StackCardData[]> {
       .limit(3);
 
     if (error) {
-      console.error("[getFeaturedStacks] Supabase error:", error);
+      logger.error("getFeaturedStacks failed", { error });
       return [];
     }
 
-    console.log("[getFeaturedStacks] rows returned:", stacks?.length ?? 0);
     if (!stacks?.length) return [];
 
     return Promise.all(stacks.map((stack) => enrichStackCard(supabase, stack)));
   } catch (e) {
-    console.error("[getFeaturedStacks] Unexpected error:", e);
+    logger.error("getFeaturedStacks unexpected error", { error: e });
     return [];
   }
 }
@@ -265,13 +265,12 @@ export async function getSiteStats(): Promise<SiteStats> {
       supabase.from("users").select("*", { count: "exact", head: true }),
     ]);
 
-    if (stackError) console.error("[getSiteStats] stacks error:", stackError);
-    if (userError) console.error("[getSiteStats] users error:", userError);
-    console.log("[getSiteStats] stacks:", stackCount, "users:", userCount);
+    if (stackError) logger.error("getSiteStats stacks query failed", { error: stackError });
+    if (userError) logger.error("getSiteStats users query failed", { error: userError });
 
     return { stacks: stackCount ?? 0, users: userCount ?? 0 };
   } catch (e) {
-    console.error("[getSiteStats] Unexpected error:", e);
+    logger.error("getSiteStats unexpected error", { error: e });
     return { stacks: 0, users: 0 };
   }
 }
@@ -284,12 +283,11 @@ export async function getServersForPicker() {
       .select("id, name, slug, category, npm_package, description")
       .order("name");
 
-    if (error) console.error("[getServersForPicker] Supabase error:", error);
-    console.log("[getServersForPicker] rows returned:", data?.length ?? 0);
+    if (error) logger.error("getServersForPicker failed", { error });
 
     return data ?? [];
   } catch (e) {
-    console.error("[getServersForPicker] Unexpected error:", e);
+    logger.error("getServersForPicker unexpected error", { error: e });
     return [];
   }
 }
