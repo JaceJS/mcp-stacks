@@ -2,13 +2,13 @@
 
 import { useState } from "react";
 
-type EditorKey = "claude" | "cursor" | "windsurf" | "vscode";
+type EditorKey = "claude" | "cursor" | "vscode" | "antigravity";
 
 const editors: { key: EditorKey; label: string }[] = [
-  { key: "claude", label: "Claude Desktop" },
-  { key: "cursor", label: "Cursor" },
-  { key: "windsurf", label: "Windsurf" },
   { key: "vscode", label: "VS Code" },
+  { key: "cursor", label: "Cursor" },
+  { key: "claude", label: "Claude Desktop" },
+  { key: "antigravity", label: "Antigravity" },
 ];
 
 export function StackDetailConfig({
@@ -16,7 +16,7 @@ export function StackDetailConfig({
 }: {
   configs: Record<EditorKey, string>;
 }) {
-  const [activeEditor, setActiveEditor] = useState<EditorKey>("claude");
+  const [activeEditor, setActiveEditor] = useState<EditorKey>("vscode");
   const [copied, setCopied] = useState(false);
 
   function handleCopy() {
@@ -27,7 +27,7 @@ export function StackDetailConfig({
 
   return (
     <div className="code-block">
-      <div className="flex items-center justify-between border-b border-[var(--border)] px-2">
+      <div className="flex items-center justify-between border-b border-[var(--border)] pl-2 pr-3">
         <div className="flex overflow-x-auto">
           {editors.map((editor) => (
             <button
@@ -41,13 +41,12 @@ export function StackDetailConfig({
         </div>
         <button
           onClick={handleCopy}
-          className="text-[12px] px-3 py-1.5 rounded-md text-[var(--foreground-muted)] hover:text-[var(--accent)] hover:bg-[var(--accent-glow)] transition-all cursor-pointer border-none bg-transparent mr-2"
-          style={{ fontFamily: "var(--font-code)" }}
+          className="ml-2 shrink-0 cursor-pointer rounded border border-border bg-transparent px-2.5 py-1 font-mono text-[11px] text-muted transition-all hover:border-accent hover:text-accent"
         >
           {copied ? "Copied!" : "Copy"}
         </button>
       </div>
-      <pre style={{ fontFamily: "var(--font-code)", fontSize: 13, lineHeight: 1.7, padding: "20px 24px", overflow: "auto" }}>
+      <pre style={{ fontFamily: "var(--font-code)", fontSize: 13, lineHeight: 1.7, padding: "20px 24px", overflowX: "hidden", whiteSpace: "pre-wrap", wordBreak: "break-all" }}>
         <code className="text-[var(--foreground-muted)]">
           {configs[activeEditor]}
         </code>

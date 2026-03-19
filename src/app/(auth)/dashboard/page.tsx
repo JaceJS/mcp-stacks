@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { deleteStack } from "@/features/stacks/actions";
-import { signOut } from "@/features/auth/actions";
 import { getUserStacks } from "@/features/stacks/queries";
 import type { Metadata } from "next";
 
@@ -15,31 +14,13 @@ export default async function DashboardPage() {
     <div className="px-6 py-12">
       <div className="mx-auto max-w-4xl">
         {/* Header */}
-        <div className="flex items-center justify-between mb-10">
-          <div>
-            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight mb-1">
-              Dashboard
-            </h1>
-            <p className="text-[14px] text-muted">
-              {user?.display_name ?? user?.email ?? "Your account"}
-            </p>
-          </div>
-          <div className="flex items-center gap-3">
-            <Link
-              href="/stacks/new"
-              className="btn-primary py-2! px-5! text-[13px]!"
-            >
-              New stack
-            </Link>
-            <form>
-              <button
-                formAction={signOut}
-                className="text-[13px] text-subtle hover:text-muted transition-colors cursor-pointer bg-transparent border-none"
-              >
-                Sign out
-              </button>
-            </form>
-          </div>
+        <div className="mb-8">
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight mb-1">
+            Dashboard
+          </h1>
+          <p className="text-[14px] text-muted">
+            {user?.display_name ?? user?.email ?? "Your account"}
+          </p>
         </div>
 
         {/* Stacks list */}
@@ -98,7 +79,7 @@ export default async function DashboardPage() {
                         "use server";
                         await deleteStack(stack.id);
                       }}
-                      className="text-[12px] px-3 py-1.5 rounded-lg border border-[--border] text-[--cat-monitoring] hover:border-[--cat-monitoring] hover:bg-[rgba(251,113,133,0.08)] transition-colors cursor-pointer bg-transparent"
+                      className="btn-delete"
                     >
                       Delete
                     </button>

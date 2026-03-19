@@ -14,14 +14,14 @@ export default async function AuthLayout({
   } = await supabase.auth.getUser();
 
   if (!user) {
-    redirect("/auth/login");
+    redirect("/login");
   }
 
   return (
-    <div className="min-h-screen relative">
+    <div className="min-h-screen flex flex-col relative">
       <div className="grain-overlay" />
       <Navbar />
-      <main className="pt-16">{children}</main>
+      <main className="pt-16 flex-1">{children}</main>
       <Footer />
     </div>
   );

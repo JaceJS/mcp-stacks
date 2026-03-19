@@ -35,32 +35,17 @@ export function buildEditorConfigs(servers: ServerForConfig[]): EditorConfigs {
   for (const server of servers) {
     if (!server.npm_package) continue;
     const key = server.slug || slugify(server.name);
-    mcpServers[key] = { command: "npx", args: [server.npm_package] };
+    mcpServers[key] = { command: "npx", args: ["-y", server.npm_package] };
   }
 
+  const mcpServersWithType = Object.fromEntries(
+    Object.entries(mcpServers).map(([k, v]) => [k, { ...v, type: "stdio" }]),
+  );
+
   return {
-    claude: JSON.stringify({ mcpServers }, null, 2),
-    cursor: JSON.stringify(
-      {
-        mcpServers: Object.fromEntries(
-          Object.entries(mcpServers).map(([k, v]) => [k, { ...v, enabled: true }]),
-        ),
-      },
-      null,
-      2,
-    ),
-    windsurf: JSON.stringify(
-      {
-        mcpServers: Object.fromEntries(
-          Object.entries(mcpServers).map(([k, v]) => {
-            const args = (v.args as string[]) ?? [];
-            return [k, { serverUrl: `npx ${args[0] ?? ""}`.trim() }];
-          }),
-        ),
-      },
-      null,
-      2,
-    ),
-    vscode: JSON.stringify({ "mcp.servers": mcpServers }, null, 2),
+    claude: `// ~/Library/Application Support/Claude/claude_desktop_config.json\n${JSON.stringify({ mcpServers }, null, 2)}`,
+    cursor: `// ~/.cursor/mcp.json\n${JSON.stringify({ mcpServers }, null, 2)}`,
+    vscode: `// .vscode/mcp.json\n${JSON.stringify({ servers: mcpServersWithType }, null, 2)}`,
+    antigravity: `// ~/.gemini/antigravity/mcp_config.json\n${JSON.stringify({ mcpServers }, null, 2)}`,
   };
 }

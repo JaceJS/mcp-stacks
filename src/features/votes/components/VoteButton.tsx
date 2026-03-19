@@ -18,7 +18,7 @@ export function VoteButton({
 
   function handleVote() {
     if (!isLoggedIn) {
-      window.location.href = `/auth/login?next=/stacks/${stackId}`;
+      window.location.href = `/login?next=/stacks/${stackId}`;
       return;
     }
     startTransition(() => {

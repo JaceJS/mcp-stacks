@@ -2,18 +2,19 @@
 
 import { useState } from "react";
 
-type EditorKey = "claude" | "cursor" | "windsurf" | "vscode";
+type EditorKey = "claude" | "cursor" | "vscode" | "antigravity";
 
 const editors: { key: EditorKey; label: string }[] = [
-  { key: "claude", label: "Claude Desktop" },
-  { key: "cursor", label: "Cursor" },
-  { key: "windsurf", label: "Windsurf" },
   { key: "vscode", label: "VS Code" },
+  { key: "cursor", label: "Cursor" },
+  { key: "claude", label: "Claude Desktop" },
+  { key: "antigravity", label: "Antigravity" },
 ];
 
 const configs: Record<EditorKey, { lines: TokenLine[] }> = {
   claude: {
     lines: [
+      { tokens: [{ type: "comment", value: "// ~/Library/Application Support/Claude/claude_desktop_config.json" }] },
       { tokens: [{ type: "bracket", value: "{" }] },
       {
         tokens: [
@@ -43,6 +44,8 @@ const configs: Record<EditorKey, { lines: TokenLine[] }> = {
           { type: "indent", value: "      " },
           { type: "key", value: '"args"' },
           { type: "plain", value: ": [" },
+          { type: "string", value: '"-y"' },
+          { type: "plain", value: ", " },
           { type: "string", value: '"@context7/mcp"' },
           { type: "plain", value: "]" },
         ],
@@ -74,6 +77,8 @@ const configs: Record<EditorKey, { lines: TokenLine[] }> = {
           { type: "indent", value: "      " },
           { type: "key", value: '"args"' },
           { type: "plain", value: ": [" },
+          { type: "string", value: '"-y"' },
+          { type: "plain", value: ", " },
           { type: "string", value: '"@supabase/mcp"' },
           { type: "plain", value: "]" },
         ],
@@ -105,6 +110,8 @@ const configs: Record<EditorKey, { lines: TokenLine[] }> = {
           { type: "indent", value: "      " },
           { type: "key", value: '"args"' },
           { type: "plain", value: ": [" },
+          { type: "string", value: '"-y"' },
+          { type: "plain", value: ", " },
           { type: "string", value: '"@brave/mcp-search"' },
           { type: "plain", value: "]" },
         ],
@@ -126,6 +133,7 @@ const configs: Record<EditorKey, { lines: TokenLine[] }> = {
   },
   cursor: {
     lines: [
+      { tokens: [{ type: "comment", value: "// ~/.cursor/mcp.json" }] },
       { tokens: [{ type: "bracket", value: "{" }] },
       {
         tokens: [
@@ -155,190 +163,8 @@ const configs: Record<EditorKey, { lines: TokenLine[] }> = {
           { type: "indent", value: "      " },
           { type: "key", value: '"args"' },
           { type: "plain", value: ": [" },
-          { type: "string", value: '"@context7/mcp"' },
-          { type: "plain", value: "]," },
-        ],
-      },
-      {
-        tokens: [
-          { type: "indent", value: "      " },
-          { type: "key", value: '"enabled"' },
-          { type: "plain", value: ": " },
-          { type: "bool", value: "true" },
-        ],
-      },
-      {
-        tokens: [
-          { type: "indent", value: "    " },
-          { type: "plain", value: "}," },
-        ],
-      },
-      {
-        tokens: [
-          { type: "indent", value: "    " },
-          { type: "key", value: '"supabase"' },
-          { type: "plain", value: ": {" },
-        ],
-      },
-      {
-        tokens: [
-          { type: "indent", value: "      " },
-          { type: "key", value: '"command"' },
-          { type: "plain", value: ": " },
-          { type: "string", value: '"npx"' },
-          { type: "plain", value: "," },
-        ],
-      },
-      {
-        tokens: [
-          { type: "indent", value: "      " },
-          { type: "key", value: '"args"' },
-          { type: "plain", value: ": [" },
-          { type: "string", value: '"@supabase/mcp"' },
-          { type: "plain", value: "]," },
-        ],
-      },
-      {
-        tokens: [
-          { type: "indent", value: "      " },
-          { type: "key", value: '"enabled"' },
-          { type: "plain", value: ": " },
-          { type: "bool", value: "true" },
-        ],
-      },
-      {
-        tokens: [
-          { type: "indent", value: "    " },
-          { type: "plain", value: "}" },
-        ],
-      },
-      {
-        tokens: [
-          { type: "indent", value: "  " },
-          { type: "plain", value: "}" },
-        ],
-      },
-      { tokens: [{ type: "bracket", value: "}" }] },
-    ],
-  },
-  windsurf: {
-    lines: [
-      { tokens: [{ type: "bracket", value: "{" }] },
-      {
-        tokens: [
-          { type: "indent", value: "  " },
-          { type: "key", value: '"mcpServers"' },
-          { type: "plain", value: ": {" },
-        ],
-      },
-      {
-        tokens: [
-          { type: "indent", value: "    " },
-          { type: "key", value: '"context7"' },
-          { type: "plain", value: ": {" },
-        ],
-      },
-      {
-        tokens: [
-          { type: "indent", value: "      " },
-          { type: "key", value: '"serverUrl"' },
-          { type: "plain", value: ": " },
-          { type: "string", value: '"npx @context7/mcp"' },
-        ],
-      },
-      {
-        tokens: [
-          { type: "indent", value: "    " },
-          { type: "plain", value: "}," },
-        ],
-      },
-      {
-        tokens: [
-          { type: "indent", value: "    " },
-          { type: "key", value: '"supabase"' },
-          { type: "plain", value: ": {" },
-        ],
-      },
-      {
-        tokens: [
-          { type: "indent", value: "      " },
-          { type: "key", value: '"serverUrl"' },
-          { type: "plain", value: ": " },
-          { type: "string", value: '"npx @supabase/mcp"' },
-        ],
-      },
-      {
-        tokens: [
-          { type: "indent", value: "    " },
-          { type: "plain", value: "}," },
-        ],
-      },
-      {
-        tokens: [
-          { type: "indent", value: "    " },
-          { type: "key", value: '"brave-search"' },
-          { type: "plain", value: ": {" },
-        ],
-      },
-      {
-        tokens: [
-          { type: "indent", value: "      " },
-          { type: "key", value: '"serverUrl"' },
-          { type: "plain", value: ": " },
-          { type: "string", value: '"npx @brave/mcp-search"' },
-        ],
-      },
-      {
-        tokens: [
-          { type: "indent", value: "    " },
-          { type: "plain", value: "}" },
-        ],
-      },
-      {
-        tokens: [
-          { type: "indent", value: "  " },
-          { type: "plain", value: "}" },
-        ],
-      },
-      { tokens: [{ type: "bracket", value: "}" }] },
-    ],
-  },
-  vscode: {
-    lines: [
-      {
-        tokens: [
-          { type: "comment", value: "// .vscode/settings.json" },
-        ],
-      },
-      { tokens: [{ type: "bracket", value: "{" }] },
-      {
-        tokens: [
-          { type: "indent", value: "  " },
-          { type: "key", value: '"mcp.servers"' },
-          { type: "plain", value: ": {" },
-        ],
-      },
-      {
-        tokens: [
-          { type: "indent", value: "    " },
-          { type: "key", value: '"context7"' },
-          { type: "plain", value: ": {" },
-        ],
-      },
-      {
-        tokens: [
-          { type: "indent", value: "      " },
-          { type: "key", value: '"command"' },
-          { type: "plain", value: ": " },
-          { type: "string", value: '"npx"' },
-          { type: "plain", value: "," },
-        ],
-      },
-      {
-        tokens: [
-          { type: "indent", value: "      " },
-          { type: "key", value: '"args"' },
-          { type: "plain", value: ": [" },
+          { type: "string", value: '"-y"' },
+          { type: "plain", value: ", " },
           { type: "string", value: '"@context7/mcp"' },
           { type: "plain", value: "]" },
         ],
@@ -370,6 +196,200 @@ const configs: Record<EditorKey, { lines: TokenLine[] }> = {
           { type: "indent", value: "      " },
           { type: "key", value: '"args"' },
           { type: "plain", value: ": [" },
+          { type: "string", value: '"-y"' },
+          { type: "plain", value: ", " },
+          { type: "string", value: '"@supabase/mcp"' },
+          { type: "plain", value: "]" },
+        ],
+      },
+      {
+        tokens: [
+          { type: "indent", value: "    " },
+          { type: "plain", value: "}" },
+        ],
+      },
+      {
+        tokens: [
+          { type: "indent", value: "  " },
+          { type: "plain", value: "}" },
+        ],
+      },
+      { tokens: [{ type: "bracket", value: "}" }] },
+    ],
+  },
+  vscode: {
+    lines: [
+      {
+        tokens: [
+          { type: "comment", value: "// .vscode/mcp.json" },
+        ],
+      },
+      { tokens: [{ type: "bracket", value: "{" }] },
+      {
+        tokens: [
+          { type: "indent", value: "  " },
+          { type: "key", value: '"servers"' },
+          { type: "plain", value: ": {" },
+        ],
+      },
+      {
+        tokens: [
+          { type: "indent", value: "    " },
+          { type: "key", value: '"context7"' },
+          { type: "plain", value: ": {" },
+        ],
+      },
+      {
+        tokens: [
+          { type: "indent", value: "      " },
+          { type: "key", value: '"command"' },
+          { type: "plain", value: ": " },
+          { type: "string", value: '"npx"' },
+          { type: "plain", value: "," },
+        ],
+      },
+      {
+        tokens: [
+          { type: "indent", value: "      " },
+          { type: "key", value: '"args"' },
+          { type: "plain", value: ": [" },
+          { type: "string", value: '"-y"' },
+          { type: "plain", value: ", " },
+          { type: "string", value: '"@context7/mcp"' },
+          { type: "plain", value: "]," },
+        ],
+      },
+      {
+        tokens: [
+          { type: "indent", value: "      " },
+          { type: "key", value: '"type"' },
+          { type: "plain", value: ": " },
+          { type: "string", value: '"stdio"' },
+        ],
+      },
+      {
+        tokens: [
+          { type: "indent", value: "    " },
+          { type: "plain", value: "}," },
+        ],
+      },
+      {
+        tokens: [
+          { type: "indent", value: "    " },
+          { type: "key", value: '"supabase"' },
+          { type: "plain", value: ": {" },
+        ],
+      },
+      {
+        tokens: [
+          { type: "indent", value: "      " },
+          { type: "key", value: '"command"' },
+          { type: "plain", value: ": " },
+          { type: "string", value: '"npx"' },
+          { type: "plain", value: "," },
+        ],
+      },
+      {
+        tokens: [
+          { type: "indent", value: "      " },
+          { type: "key", value: '"args"' },
+          { type: "plain", value: ": [" },
+          { type: "string", value: '"-y"' },
+          { type: "plain", value: ", " },
+          { type: "string", value: '"@supabase/mcp"' },
+          { type: "plain", value: "]," },
+        ],
+      },
+      {
+        tokens: [
+          { type: "indent", value: "      " },
+          { type: "key", value: '"type"' },
+          { type: "plain", value: ": " },
+          { type: "string", value: '"stdio"' },
+        ],
+      },
+      {
+        tokens: [
+          { type: "indent", value: "    " },
+          { type: "plain", value: "}" },
+        ],
+      },
+      {
+        tokens: [
+          { type: "indent", value: "  " },
+          { type: "plain", value: "}" },
+        ],
+      },
+      { tokens: [{ type: "bracket", value: "}" }] },
+    ],
+  },
+  antigravity: {
+    lines: [
+      { tokens: [{ type: "comment", value: "// ~/.gemini/antigravity/mcp_config.json" }] },
+      { tokens: [{ type: "bracket", value: "{" }] },
+      {
+        tokens: [
+          { type: "indent", value: "  " },
+          { type: "key", value: '"mcpServers"' },
+          { type: "plain", value: ": {" },
+        ],
+      },
+      {
+        tokens: [
+          { type: "indent", value: "    " },
+          { type: "key", value: '"context7"' },
+          { type: "plain", value: ": {" },
+        ],
+      },
+      {
+        tokens: [
+          { type: "indent", value: "      " },
+          { type: "key", value: '"command"' },
+          { type: "plain", value: ": " },
+          { type: "string", value: '"npx"' },
+          { type: "plain", value: "," },
+        ],
+      },
+      {
+        tokens: [
+          { type: "indent", value: "      " },
+          { type: "key", value: '"args"' },
+          { type: "plain", value: ": [" },
+          { type: "string", value: '"-y"' },
+          { type: "plain", value: ", " },
+          { type: "string", value: '"@context7/mcp"' },
+          { type: "plain", value: "]" },
+        ],
+      },
+      {
+        tokens: [
+          { type: "indent", value: "    " },
+          { type: "plain", value: "}," },
+        ],
+      },
+      {
+        tokens: [
+          { type: "indent", value: "    " },
+          { type: "key", value: '"supabase"' },
+          { type: "plain", value: ": {" },
+        ],
+      },
+      {
+        tokens: [
+          { type: "indent", value: "      " },
+          { type: "key", value: '"command"' },
+          { type: "plain", value: ": " },
+          { type: "string", value: '"npx"' },
+          { type: "plain", value: "," },
+        ],
+      },
+      {
+        tokens: [
+          { type: "indent", value: "      " },
+          { type: "key", value: '"args"' },
+          { type: "plain", value: ": [" },
+          { type: "string", value: '"-y"' },
+          { type: "plain", value: ", " },
           { type: "string", value: '"@supabase/mcp"' },
           { type: "plain", value: "]" },
         ],
@@ -422,7 +442,7 @@ const tokenClassMap: Record<TokenType, string> = {
 };
 
 export function ConfigPreview() {
-  const [activeEditor, setActiveEditor] = useState<EditorKey>("claude");
+  const [activeEditor, setActiveEditor] = useState<EditorKey>("vscode");
   const [copied, setCopied] = useState(false);
 
   const config = configs[activeEditor];
@@ -439,7 +459,7 @@ export function ConfigPreview() {
   return (
     <div className="code-block animate-float">
       {/* Tab bar */}
-      <div className="flex items-center justify-between border-b border-border px-2">
+      <div className="flex items-center justify-between border-b border-border pl-2 pr-3">
         <div className="flex overflow-x-auto">
           {editors.map((editor) => (
             <button
@@ -453,7 +473,7 @@ export function ConfigPreview() {
         </div>
         <button
           onClick={handleCopy}
-          className="mr-2 cursor-pointer rounded-md border-none bg-transparent px-3 py-1.5 font-mono text-[12px] text-muted transition-all hover:bg-accent-glow hover:text-accent"
+          className="ml-2 shrink-0 cursor-pointer rounded border border-border bg-transparent px-2.5 py-1 font-mono text-[11px] text-muted transition-all hover:border-accent hover:text-accent"
         >
           {copied ? "Copied!" : "Copy"}
         </button>

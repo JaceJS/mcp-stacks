@@ -277,11 +277,11 @@ a {
   }
 
   .code-block pre {
-    @apply overflow-x-auto px-6 py-5 font-mono text-[13px] leading-[1.7];
+    @apply overflow-x-hidden px-6 py-5 font-mono text-[13px] leading-[1.7] whitespace-pre-wrap break-all;
   }
 
   .config-tab {
-    @apply cursor-pointer border-x-0 border-t-0 border-b-2 border-transparent bg-transparent px-4 py-2 font-mono text-[13px] text-muted transition-colors;
+    @apply cursor-pointer border-x-0 border-t-0 border-b-2 border-transparent bg-transparent px-4 py-2 font-mono text-[13px] text-muted transition-colors whitespace-nowrap;
   }
 
   .config-tab:hover {
@@ -361,6 +361,15 @@ a {
   .btn-secondary:hover {
     @apply border-accent bg-accent-glow text-accent;
     transform: translateY(-1px);
+  }
+
+  .btn-delete {
+    @apply inline-flex cursor-pointer items-center gap-2 rounded-lg border border-border
+           bg-transparent px-3 py-1.5 text-[12px] text-red-400 transition-colors;
+  }
+
+  .btn-delete:hover {
+    @apply border-red-500/50 bg-red-500/8 text-red-300;
   }
 
   .github-star-btn {

@@ -58,6 +58,6 @@ export type SiteStats = {
 export type EditorConfigs = {
   claude: string;
   cursor: string;
-  windsurf: string;
   vscode: string;
+  antigravity: string;
 };
