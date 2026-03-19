@@ -54,17 +54,24 @@ async function enrichStackCard(
 export async function getFeaturedStacks(): Promise<StackCardData[]> {
   try {
     const supabase = await createClient();
-    const { data: stacks } = await supabase
+    const { data: stacks, error } = await supabase
       .from("stacks")
       .select("id, title, slug, description, user_id, created_at")
       .eq("is_public", true)
       .order("created_at", { ascending: false })
       .limit(3);
 
+    if (error) {
+      console.error("[getFeaturedStacks] Supabase error:", error);
+      return [];
+    }
+
+    console.log("[getFeaturedStacks] rows returned:", stacks?.length ?? 0);
     if (!stacks?.length) return [];
 
     return Promise.all(stacks.map((stack) => enrichStackCard(supabase, stack)));
-  } catch {
+  } catch (e) {
+    console.error("[getFeaturedStacks] Unexpected error:", e);
     return [];
   }
 }
@@ -247,15 +254,24 @@ export async function getTags(): Promise<Tag[]> {
 export async function getSiteStats(): Promise<SiteStats> {
   try {
     const supabase = await createClient();
-    const [{ count: stackCount }, { count: userCount }] = await Promise.all([
+    const [
+      { count: stackCount, error: stackError },
+      { count: userCount, error: userError },
+    ] = await Promise.all([
       supabase
         .from("stacks")
         .select("*", { count: "exact", head: true })
         .eq("is_public", true),
       supabase.from("users").select("*", { count: "exact", head: true }),
     ]);
+
+    if (stackError) console.error("[getSiteStats] stacks error:", stackError);
+    if (userError) console.error("[getSiteStats] users error:", userError);
+    console.log("[getSiteStats] stacks:", stackCount, "users:", userCount);
+
     return { stacks: stackCount ?? 0, users: userCount ?? 0 };
-  } catch {
+  } catch (e) {
+    console.error("[getSiteStats] Unexpected error:", e);
     return { stacks: 0, users: 0 };
   }
 }
@@ -263,12 +279,17 @@ export async function getSiteStats(): Promise<SiteStats> {
 export async function getServersForPicker() {
   try {
     const supabase = await createClient();
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from("servers")
       .select("id, name, slug, category, npm_package, description")
       .order("name");
+
+    if (error) console.error("[getServersForPicker] Supabase error:", error);
+    console.log("[getServersForPicker] rows returned:", data?.length ?? 0);
+
     return data ?? [];
-  } catch {
+  } catch (e) {
+    console.error("[getServersForPicker] Unexpected error:", e);
     return [];
   }
 }
