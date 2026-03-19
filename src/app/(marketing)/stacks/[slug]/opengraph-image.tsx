@@ -109,6 +109,7 @@ export default async function Image({ params }: { params: Promise<{ slug: string
           {stack.user.avatar_url ? (
             <img 
               src={stack.user.avatar_url} 
+              alt="Author avatar"
               width={64} 
               height={64} 
               style={{ borderRadius: '32px', marginRight: '24px' }} 

@@ -31,6 +31,7 @@ export function UserMenu({
                    text-sm font-semibold text-accent hover:bg-accent/30 transition-colors overflow-hidden hover:cursor-pointer"
       >
         {avatarUrl ? (
+          /* eslint-disable-next-line @next/next/no-img-element */
           <img
             src={avatarUrl}
             alt={initials}

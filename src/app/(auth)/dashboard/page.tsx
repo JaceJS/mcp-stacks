@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { deleteStack } from "@/features/stacks/actions";
 import { getUserStacks, PAGE_SIZE } from "@/features/stacks/queries";
 import { DashboardStackCard } from "@/features/stacks/components/DashboardStackCard";
 import { Pagination } from "@/components/Pagination";
