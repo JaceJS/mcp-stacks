@@ -49,8 +49,8 @@ export function UserMenu({
           <Link
             href="/dashboard"
             onClick={() => setOpen(false)}
-            className="block rounded-lg px-3 py-2 text-[13px] text-muted hover:bg-accent/10
-                       hover:text-foreground transition-colors"
+            className="block rounded-lg px-3 py-2 text-[13px] text-foreground-subtle hover:bg-accent/10
+                       hover:text-accent transition-colors"
           >
             Dashboard
           </Link>

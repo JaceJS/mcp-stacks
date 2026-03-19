@@ -1,26 +1,19 @@
 import { slugify } from "@/lib/utils";
 import type { EditorConfigs } from "./types";
 
-const categoryClass: Record<string, string> = {
-  docs: "pill-docs",
-  documentation: "pill-docs",
-  dev: "pill-dev",
-  "dev-tools": "pill-dev",
-  "dev tools": "pill-dev",
-  development: "pill-dev",
-  database: "pill-database",
-  db: "pill-database",
-  search: "pill-search",
-  monitoring: "pill-monitoring",
-  observability: "pill-monitoring",
-  ai: "pill-ai",
-  cloud: "pill-cloud",
-  infrastructure: "pill-cloud",
-};
-
 export function getPillClass(category: string | null): string {
   if (!category) return "pill-default";
-  return categoryClass[category.toLowerCase()] ?? "pill-default";
+  const cat = category.toLowerCase();
+
+  if (cat.includes("doc") || cat.includes("wiki")) return "pill-docs";
+  if (cat.includes("data") || cat.includes("db") || cat.includes("sql")) return "pill-database";
+  if (cat.includes("search")) return "pill-search";
+  if (cat.includes("monitor") || cat.includes("observ") || cat.includes("log") || cat.includes("error")) return "pill-monitoring";
+  if (cat.includes("ai") || cat.includes("llm") || cat.includes("model") || cat.includes("machine learning")) return "pill-ai";
+  if (cat.includes("cloud") || cat.includes("infra") || cat.includes("deploy") || cat.includes("host")) return "pill-cloud";
+  if (cat.includes("dev") || cat.includes("tool") || cat.includes("code") || cat.includes("test")) return "pill-dev";
+
+  return "pill-default";
 }
 
 type ServerForConfig = {

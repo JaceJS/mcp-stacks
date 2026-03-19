@@ -84,11 +84,12 @@ export default async function Home() {
   ]);
 
   return (
-    <div className="relative min-h-screen overflow-hidden">
+    <div className="relative min-h-screen flex flex-col overflow-hidden">
       <div className="grain-overlay" />
       <Navbar />
 
-      <section className="relative px-6 pb-24 pt-40">
+      <main className="flex-1">
+        <section className="relative px-6 pb-24 pt-40">
         <div className="hero-glow" />
         <div className="relative z-10 mx-auto max-w-4xl text-center">
           <div className="animate-fade-up mb-8 inline-flex items-center gap-2 rounded-full border border-border-accent bg-accent-glow px-4 py-2">
@@ -332,6 +333,7 @@ export default async function Home() {
           </div>
         </div>
       </section>
+      </main>
 
       <Footer />
     </div>

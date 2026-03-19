@@ -26,7 +26,7 @@ export async function Navbar() {
 
   return (
     <nav className="nav-blur fixed left-0 right-0 top-0 z-50 border-b border-border">
-      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
+      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between">
         <div className="flex items-center gap-8">
           <Link href="/" className="group flex items-center gap-2.5">
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-accent transition-shadow group-hover:shadow-[0_0_16px_var(--accent-glow-strong)]">
@@ -80,7 +80,7 @@ export async function Navbar() {
           </Link>
           <Link
             href="/explore"
-            className="text-[13px] text-muted transition-colors hover:text-foreground"
+            className="text-[13px] text-foreground-subtle transition-colors hover:text-accent"
           >
             Browse
           </Link>
@@ -96,7 +96,7 @@ export async function Navbar() {
             <>
               <Link
                 href="/login"
-                className="text-[13px] text-muted transition-colors hover:text-foreground"
+                className="text-[13px] text-foreground-subtle transition-colors hover:text-accent"
               >
                 Sign in
               </Link>

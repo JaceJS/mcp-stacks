@@ -47,11 +47,36 @@ export function StackDetailConfig({
         </button>
       </div>
       <pre
-        className="font-mono"
-        style={{ fontSize: 13, lineHeight: 1.7, padding: "20px 24px", overflowX: "hidden", whiteSpace: "pre-wrap", wordBreak: "break-all" }}
+        className="font-mono overflow-x-hidden whitespace-pre-wrap break-all px-6 py-5"
+        style={{ fontSize: 13, lineHeight: 1.7 }}
       >
-        <code className="text-muted">
-          {configs[activeEditor]}
+        <code>
+          {configs[activeEditor].split("\n").map((line, i) => {
+            if (line.trim().startsWith("//")) {
+              return (
+                <div key={i} className="leading-7">
+                  <span className="token-comment">{line}</span>
+                </div>
+              );
+            }
+
+            const html = line
+              .replace(/</g, "&lt;")
+              .replace(/>/g, "&gt;")
+              .replace(/("[^"]*")\s*:/g, '<span class="token-key">$1</span>:')
+              .replace(/:\s*("[^"]*")/g, ': <span class="token-string">$1</span>')
+              .replace(/:\s*(\b\d+\b)/g, ': <span class="token-number">$1</span>')
+              .replace(/:\s*(\btrue\b|\bfalse\b|\bnull\b)/g, ': <span class="token-bool">$1</span>')
+              .replace(/([\{\}\[\]])/g, '<span class="token-bracket">$1</span>');
+
+            return (
+              <div
+                key={i}
+                className="leading-7"
+                dangerouslySetInnerHTML={{ __html: html || " " }}
+              />
+            );
+          })}
         </code>
       </pre>
     </div>
