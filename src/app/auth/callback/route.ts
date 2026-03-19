@@ -25,12 +25,15 @@ export async function GET(request: Request) {
               user.email ??
               (user.user_metadata?.email as string | undefined) ??
               user.id,
-            avatar_url: user.user_metadata?.avatar_url as string | undefined,
+            avatar_url:
+              (user.user_metadata?.avatar_url as string | undefined) ??
+              (user.user_metadata?.picture as string | undefined),
             display_name:
               (user.user_metadata?.full_name as string | undefined) ??
+              (user.user_metadata?.name as string | undefined) ??
               (user.user_metadata?.user_name as string | undefined),
           },
-          { onConflict: "id", ignoreDuplicates: true }
+          { onConflict: "id" }
         );
       }
 
