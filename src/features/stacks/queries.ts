@@ -421,3 +421,24 @@ export async function getStackForEdit(slug: string) {
     tagIds: (stackTags ?? []).map((r) => r.tag_id),
   };
 }
+
+export async function getAllStackSlugs(): Promise<{ slug: string; created_at: string }[]> {
+  try {
+    const supabase = await createClient();
+    const { data, error } = await supabase
+      .from("stacks")
+      .select("slug, created_at")
+      .eq("is_public", true)
+      .order("created_at", { ascending: false });
+
+    if (error) {
+      logger.error("getAllStackSlugs failed", { error });
+      return [];
+    }
+
+    return data ?? [];
+  } catch (e) {
+    logger.error("getAllStackSlugs unexpected error", { error: e });
+    return [];
+  }
+}

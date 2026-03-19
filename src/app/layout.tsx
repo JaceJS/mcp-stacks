@@ -19,14 +19,17 @@ const siteConfig = {
   name: SITE_NAME,
   url: SITE_URL,
   description:
-    "Discover and share curated MCP server combinations. Browse community-tested stacks, copy configs in one click, and share your own setup.",
+    "Stop guessing which MCP servers to use. Browse community-curated stacks, copy configs in one click.",
 };
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
+  alternates: {
+    canonical: "/",
+  },
   title: {
     default: "MCP Stacks — Discover & Share Curated MCP Server Combos",
-    template: "%s | MCP Stacks",
+    template: "%s — MCP Stacks",
   },
   description: siteConfig.description,
   keywords: [

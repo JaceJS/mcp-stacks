@@ -4,6 +4,7 @@ import { ShareButton } from "@/features/stacks/components/ShareButton";
 import { StackDetailConfig } from "@/features/stacks/components/StackDetailConfig";
 import { getStack } from "@/features/stacks/queries";
 import { buildEditorConfigs, getPillClass } from "@/features/stacks/utils";
+import { SITE_URL } from "@/lib/constants";
 import type { Metadata } from "next";
 
 export async function generateMetadata({
@@ -15,11 +16,22 @@ export async function generateMetadata({
   const stack = await getStack(slug);
   if (!stack) return { title: "Stack Not Found" };
 
+  const description =
+    stack.description?.slice(0, 160) ??
+    `A curated MCP server stack with ${stack.servers.length} servers.`;
+
   return {
     title: stack.title,
-    description:
-      stack.description ??
-      `A curated MCP server stack with ${stack.servers.length} servers.`,
+    description,
+    alternates: {
+      canonical: `${SITE_URL}/stacks/${stack.slug}`,
+    },
+    openGraph: {
+      title: stack.title,
+      description,
+      url: `${SITE_URL}/stacks/${stack.slug}`,
+      // Next.js will automatically inject the dynamic opengraph-image.tsx here
+    },
   };
 }
 
@@ -34,8 +46,30 @@ export default async function StackDetailPage({
 
   const configs = buildEditorConfigs(stack.servers);
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    name: stack.title,
+    description: stack.description ?? `A curated MCP server stack with ${stack.servers.length} servers.`,
+    applicationCategory: "DeveloperApplication",
+    operatingSystem: "Any",
+    author: {
+      "@type": "Person",
+      name: stack.user.display_name ?? stack.user.username ?? "anon",
+    },
+    aggregateRating: stack.vote_count > 0 ? {
+      "@type": "AggregateRating",
+      ratingValue: "5",
+      ratingCount: stack.vote_count,
+    } : undefined,
+  };
+
   return (
     <div className="px-6 py-12">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <div className="mx-auto max-w-4xl">
         {/* Back link */}
         <a
