@@ -7,6 +7,8 @@ import { REPO_URL } from "@/lib/constants";
 import { getFeaturedStacks } from "@/features/stacks/queries";
 import { getSiteStats } from "@/features/stacks/queries";
 
+export const dynamic = "force-dynamic";
+
 const steps = [
   {
     step: "01",

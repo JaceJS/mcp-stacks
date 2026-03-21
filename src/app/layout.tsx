@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Outfit, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { SITE_NAME, SITE_URL } from "@/lib/constants";
+import { Analytics } from "@vercel/analytics/next";
 
 const outfit = Outfit({
   variable: "--font-outfit",
@@ -95,6 +96,7 @@ export default function RootLayout({
         className={`${outfit.variable} ${jetbrainsMono.variable} antialiased`}
       >
         {children}
+        <Analytics />
       </body>
     </html>
   );
