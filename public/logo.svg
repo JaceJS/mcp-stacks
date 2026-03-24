@@ -1,0 +1,6 @@
+<svg width="512" height="512" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect x="2" y="2" width="36" height="36" rx="8" fill="#0a0a0c" stroke="#6ee7a0" stroke-width="2"/>
+  <path d="M12 12L20 8L28 12L20 16Z" fill="#6ee7a0"/>
+  <path d="M12 18L20 14L28 18L20 22Z" fill="#6ee7a0" opacity="0.6"/>
+  <path d="M12 24L20 20L28 24L20 28Z" fill="#6ee7a0" opacity="0.3"/>
+</svg>
